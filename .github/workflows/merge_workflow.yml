@@ -102,10 +102,9 @@ jobs:
           echo "${{ secrets.FRONTEND_ENV }}" > .env
 
       - name: Build and push
-        working-directory: nextjs-minikube-integration
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
+          file: ./nextjs-minikube-integration/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}:${{ needs.versioning.outputs.new_version }}
