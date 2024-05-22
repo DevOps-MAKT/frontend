@@ -10,6 +10,9 @@ on:
     branches:
       - 'feature/workflow-setup'
       - 'develop'
+    paths:
+      - 'nextjs-minikube-integration/**'
+      - '.github/workflows/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
