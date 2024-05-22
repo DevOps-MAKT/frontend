@@ -36,10 +36,12 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: Install dependencies with npm
+        working-directory: nextjs-minikube-integration
         run: npm install
 
       - name: Run build
-        run: npm build
+        working-directory: nextjs-minikube-integration
+        run: npm run build
 
   versioning:
     name: Bump to new version
@@ -91,12 +93,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Insert Next ENV
-        working-directory: deploy/tools/env/
+      - name: Insert ENV
+        working-directory: nextjs-minikube-integration
         run: |
           echo "${{ secrets.FRONTEND_ENV }}" > .env
 
       - name: Build and push
+        working-directory: nextjs-minikube-integration
         uses: docker/build-push-action@v5
         with:
           context: .
