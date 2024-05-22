@@ -45,7 +45,9 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: Install dependencies with npm
+        working-directory: nextjs-minikube-integration
         run: npm install
 
       - name: Run build
+        working-directory: nextjs-minikube-integration
         run: npm build
