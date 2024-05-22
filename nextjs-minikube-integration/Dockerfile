@@ -4,6 +4,7 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
+RUN ls
 COPY package.json yarn.lock* package-lock.json* ./
 
 RUN \
