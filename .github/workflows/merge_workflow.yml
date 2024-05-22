@@ -2,8 +2,11 @@ name: 'Merge workflow'
 on:
   push:
     branches:
-      - 'main'
-      - 'develop'
+      - 'feature/workflow-setup'
+      - 'development'
+    paths:
+      - 'nextjs-minikube-integration/**'
+      - '.github/workflows/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
