@@ -50,4 +50,4 @@ jobs:
 
       - name: Run build
         working-directory: nextjs-minikube-integration
-        run: npm build
+        run: npm run build
