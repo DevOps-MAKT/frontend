@@ -28,14 +28,8 @@ const LogInPage = () => {
 
     try {
       const response = await post('user' ,'/auth/login', JSON.stringify(formData))
-      console.log(response)
-      if (response.status === 200) {
-        setToken(response.data.data)
-        router.push("/")
-      }
-      else {
-        throw new Error('Failed to sign in');
-      }
+      setToken(response.data)
+      router.push("/")
     } catch (error) {
       setError(true)
       console.error('Sign in failed:', error.message);
