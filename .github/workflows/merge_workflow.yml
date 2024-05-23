@@ -2,7 +2,7 @@ name: 'Merge workflow'
 on:
   push:
     branches:
-      - 'feature/workflow-setup'
+      - 'main'
       - 'development'
     paths:
       - 'nextjs-minikube-integration/**'
