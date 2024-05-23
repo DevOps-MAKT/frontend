@@ -7,8 +7,8 @@ WORKDIR /app
 COPY ./nextjs-minikube-integration/package.json ./nextjs-minikube-integration/yarn.lock* ./nextjs-minikube-integration/package-lock.json* ./
 
 RUN \
-    if [ -f ./nextjs-minikube-integration/yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f ./nextjs-minikube-integration/package-lock.json ]; then npm ci; \
+    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then npm ci; \
     else echo "Lock file not found." && exit 1; \
     fi
 
