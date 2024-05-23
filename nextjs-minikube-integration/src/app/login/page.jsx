@@ -1,8 +1,8 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { post } from "../../utils/httpRequests"
-import { setToken } from "../../utils/token"
+import { post } from "../../utils/httpRequests";
+import { setToken } from "../../utils/token";
 
 const LogInPage = () => {
 
@@ -67,7 +67,7 @@ const LogInPage = () => {
           </div>
 
           <div className="text-sm text-center pt-5">
-            Don't have an account? Sign up&nbsp;
+            Don&apos;t have an account? Sign up&nbsp;
             <a href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
               here
             </a>

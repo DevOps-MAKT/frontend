@@ -4,7 +4,7 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-COPY package.json yarn.lock* package-lock.json* ./
+COPY ./nextjs-minikube-integration/package.json ./nextjs-minikube-integration/yarn.lock* ./nextjs-minikube-integration/package-lock.json* ./
 
 RUN \
     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
@@ -18,7 +18,7 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY ./nextjs-minikube-integration/. .
 
 RUN yarn build
 
