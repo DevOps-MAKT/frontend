@@ -3,7 +3,7 @@ import { getToken, clearToken } from './token';
 
 const services = {
     'user': 'http://localhost:8001/user-service',
-    'accomodation': 'http://localhost:8002/accommodation-service',
+    'accommodation': 'http://localhost:8002/accommodation-service',
 }
 
 const headers = {headers: {'Content-Type': 'application/json'}}
@@ -39,7 +39,22 @@ httpService.interceptors.response.use(
 export const post = async (service, route, body) => {
   try {
     const response = await httpService.post(`${services[service]}${route}`, body, headers);
-    return response;
+    if (response.status >= 300) {
+      throw new Error(`Status ${response.status}: ${response.statusText}`)
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const get = async (service, route) => {
+  try {
+    const response = await httpService.get(`${services[service]}${route}`, headers);
+    if (response.status !== 200) {
+      throw new Error(`Status ${response.status}: ${response.statusText}`)
+    }
+    return response.data;
   } catch (error) {
     throw new Error(error.message);
   }
