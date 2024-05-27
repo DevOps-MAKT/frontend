@@ -1,18 +1,18 @@
 export const setToken = (token) => {
-    if (process.browser) {
+  if (typeof window !== 'undefined') {
       localStorage.setItem('token', token);
     }
   };
   
   export const getToken = () => {
-    if (process.browser) {
+    if (typeof window !== 'undefined') {
       return localStorage.getItem('token');
     }
     return null;
   };
   
   export const clearToken = () => {
-    if (process.browser) {
+    if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
     }
   };

@@ -1,21 +1,28 @@
 'use client'
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { post } from "../../utils/httpRequests";
-import { setToken } from "../../utils/token";
+import { getToken, setToken } from "../../utils/token";
 
 const LogInPage = () => {
 
   const router = useRouter();
 
-  const [error, setError] = useState();
+  const [error, setError] = useState(false);
 
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    const token = getToken();
+    if (token !== null) {
+      router.push("/")
+    }
+  }, []);
+
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -23,14 +30,14 @@ const LogInPage = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
       const response = await post('user' ,'/auth/login', JSON.stringify(formData))
       setToken(response.data)
-      router.push("/")
-    } catch (error) {
+      window.location.reload();
+    } catch (error: any) {
       setError(true)
       console.error('Sign in failed:', error.message);
     }
