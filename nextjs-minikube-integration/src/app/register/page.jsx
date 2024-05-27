@@ -81,7 +81,6 @@ const RegistrationPage = () => {
         city: formData.location.split(', ')[0],
         country: formData.location.split(', ')[1],
       }
-      console.log(data)
       const response = await post('user' ,'/user/create', JSON.stringify(data))
       router.push("/login")
     } catch (error) {
