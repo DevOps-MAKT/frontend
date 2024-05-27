@@ -80,15 +80,14 @@ const Navbar = () => {
         country: formData.location === '' ? '' : formData.location.split(', ')[1],
       };
       const queryParams = new URLSearchParams(data as any).toString();
-      const response = await get('accommodation', '/accommodation/filter?' + queryParams);
-      console.log(response)
+      router.push('/search?' + queryParams)
     } catch (error: any) {
       console.error('Failed to register:', error.message);
     }
   };
 
   return (
-    <nav className="bg-primary py-2 px-4">
+    <nav className="sticky top-0 bg-primary py-2 px-4 w-full">
       <div className="grid grid-cols-4">
         <div className="text-white my-auto">
           <a href="/">Baboon Bookings</a>
