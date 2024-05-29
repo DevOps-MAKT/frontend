@@ -6,7 +6,7 @@ import { post, get } from "../../utils/httpRequests"
 const RegistrationPage = () => {
 
   const router = useRouter();
-  const [cities, setCities] = useState([])
+  const [cities, setCities] = useState([]);
   const [errors, setErrors] = useState({}); 
 
   const [formData, setFormData] = useState({
@@ -50,7 +50,7 @@ const RegistrationPage = () => {
         return setErrors(true);
       }
     }
-    return setErrors(!passwordsMatch())
+    return setErrors(!passwordsMatch());
   };
 
   useEffect(() => {
