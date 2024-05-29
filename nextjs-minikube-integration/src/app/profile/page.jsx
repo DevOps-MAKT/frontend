@@ -241,7 +241,7 @@ const ProfilePage = () => {
           <ModalContent>
             {(okOnClose) => (
               <>
-                <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+                <ModalHeader className="flex flex-col gap-1">Success</ModalHeader>
                 <ModalBody>
                   <p>
                     {message}
