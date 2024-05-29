@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-import { get, patch } from "../../utils/httpRequests";
+import { get, patch, put } from "../../utils/httpRequests";
 import { Button, Input, Select, SelectItem, Divider, input } from "@nextui-org/react";
 import { useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 
@@ -13,6 +13,7 @@ const ProfilePage = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const [formData, setFormData] = useState({
+    username: '',
     firstName: '',
     lastName: '',
     location: '',
@@ -83,6 +84,7 @@ const ProfilePage = () => {
       try {
         const response = await get("user", "/user/retrieve-current-user-info");
         setFormData({
+          username: response.data.username,
           firstName: response.data.firstName,
           lastName: response.data.lastName,
           location: response.data.city + ", " + response.data.country,
@@ -97,8 +99,21 @@ const ProfilePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("You have successfully changed your account data.");
-    onOpen();
+    try {
+      const data = {
+        username: formData.username,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        city: formData.location.split(', ')[0],
+        country: formData.location.split(', ')[1],
+      };
+      await put('user' ,'/user/update', JSON.stringify(data));
+      setMessage("You have successfully changed your account data.");
+      onOpen();
+      setPasswordFormData({ password: '', confirmationPassword: '' });
+    } catch (error) {
+      console.error('User data update failed:', error.message);
+    }
   };
 
   const handlePasswordSubmit = async (e) => {
