@@ -22,7 +22,7 @@ const LogInPage = () => {
     }
   }, []);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -30,15 +30,15 @@ const LogInPage = () => {
     });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await post('user' ,'/auth/login', JSON.stringify(formData))
-      setToken(response.data)
+      const response = await post('user' ,'/auth/login', JSON.stringify(formData));
+      setToken(response.data);
+      router.push("/");
       window.location.reload();
-    } catch (error: any) {
-      setError(true)
+    } catch (error) {
+      setError(true);
       console.error('Sign in failed:', error.message);
     }
   };

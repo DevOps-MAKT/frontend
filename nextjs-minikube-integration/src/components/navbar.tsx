@@ -92,7 +92,7 @@ const Navbar = () => {
         country: formData.location === '' ? '' : formData.location.split(', ')[1],
       };
       const queryParams = new URLSearchParams(data as any).toString();
-      router.push('/search?' + queryParams)
+      router.push('/search?' + queryParams);
     } catch (error: any) {
       console.error('Failed to register:', error.message);
     }

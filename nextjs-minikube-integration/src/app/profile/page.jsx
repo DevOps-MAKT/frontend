@@ -1,16 +1,20 @@
 'use client'
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { get, patch, put } from "../../utils/httpRequests";
 import { Button, Input, Select, SelectItem, Divider, input } from "@nextui-org/react";
 import { useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
+import { clearToken, getRole } from "@/utils/token";
 
 const ProfilePage = () => {
 
+  const router = useRouter();
   const [cities, setCities] = useState([]);
   const [errors, setErrors] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState(false);
   const [message, setMessage] = useState("");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const okModal = useDisclosure();
+  const errorModal = useDisclosure();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -107,9 +111,9 @@ const ProfilePage = () => {
         city: formData.location.split(', ')[0],
         country: formData.location.split(', ')[1],
       };
-      await put('user' ,'/user/update', JSON.stringify(data));
+      await put('user', '/user/update', JSON.stringify(data));
       setMessage("You have successfully changed your account data.");
-      onOpen();
+      okModal.onOpen();
       setPasswordFormData({ password: '', confirmationPassword: '' });
     } catch (error) {
       console.error('User data update failed:', error.message);
@@ -119,9 +123,9 @@ const ProfilePage = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
-      await patch('user' ,'/user/update-password', JSON.stringify(passwordFormData));
+      await patch('user', '/user/update-password', JSON.stringify(passwordFormData));
       setMessage("You have successfully changed your password.");
-      onOpen();
+      okModal.onOpen();
       setPasswordFormData({ password: '', confirmationPassword: '' });
     } catch (error) {
       console.error('Password update failed:', error.message);
@@ -130,6 +134,19 @@ const ProfilePage = () => {
 
   const handleDeleteSubmit = async (e) => {
     e.preventDefault();
+    const role = getRole();
+    try {
+      if (role === 'host') {
+        await patch('user', '/user/terminate-host', null);
+      } else {
+        await patch('user', '/user/terminate-guest', null);
+      }
+      clearToken();
+      router.push('/login');
+      window.location.reload();
+    } catch (error) {
+      console.error('Account termination failed:', error.message);
+    }
   };
 
   return (
@@ -213,16 +230,16 @@ const ProfilePage = () => {
           <div className="text-gray-700 text-sm pr-4">
             Warning! This action is irreversible. You won&apos;t be able to access your account if you terminate it.
           </div>
-          <Button type="submit" color="danger" onClick={handleDeleteSubmit} >
+          <Button color="danger" onClick={errorModal.onOpen} >
             Delete
           </Button>
         </div>
       </div>
 
       <>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <Modal backdrop="blur" isOpen={okModal.isOpen} onOpenChange={okModal.onOpenChange}>
           <ModalContent>
-            {(onClose) => (
+            {(okOnClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
                 <ModalBody>
@@ -231,8 +248,32 @@ const ProfilePage = () => {
                   </p>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="primary" variant="light" onPress={onClose}>
+                  <Button color="primary" variant="light" onPress={okOnClose}>
                     Close
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </>
+      <>
+        <Modal backdrop="blur" isOpen={errorModal.isOpen} onOpenChange={errorModal.onOpenChange}>
+          <ModalContent>
+            {(errorOnClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">Warning</ModalHeader>
+                <ModalBody>
+                  <p>
+                    This action is irreversible. You will be signed out and won&apos;t be able to access your account again. Are you sure you want to continue?
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" variant="light" onPress={errorOnClose}>
+                    Close
+                  </Button>
+                  <Button type="submit" color="danger" onClick={handleDeleteSubmit} >
+                    Delete
                   </Button>
                 </ModalFooter>
               </>
