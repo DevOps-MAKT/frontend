@@ -59,3 +59,27 @@ export const get = async (service, route) => {
     throw new Error(error.message);
   }
 };
+
+export const patch = async (service, route, body) => {
+  try {
+    const response = await httpService.patch(`${services[service]}${route}`, body, headers);
+    if (response.status >= 300) {
+      throw new Error(`Status ${response.status}: ${response.statusText}`)
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const put = async (service, route, body) => {
+  try {
+    const response = await httpService.put(`${services[service]}${route}`, body, headers);
+    if (response.status >= 300) {
+      throw new Error(`Status ${response.status}: ${response.statusText}`)
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

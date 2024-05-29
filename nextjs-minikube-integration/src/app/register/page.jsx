@@ -6,7 +6,7 @@ import { post, get } from "../../utils/httpRequests"
 const RegistrationPage = () => {
 
   const router = useRouter();
-  const [cities, setCities] = useState([])
+  const [cities, setCities] = useState([]);
   const [errors, setErrors] = useState({}); 
 
   const [formData, setFormData] = useState({
@@ -50,7 +50,7 @@ const RegistrationPage = () => {
         return setErrors(true);
       }
     }
-    return setErrors(!passwordsMatch())
+    return setErrors(!passwordsMatch());
   };
 
   useEffect(() => {
@@ -81,8 +81,8 @@ const RegistrationPage = () => {
         city: formData.location.split(', ')[0],
         country: formData.location.split(', ')[1],
       }
-      const response = await post('user' ,'/user/create', JSON.stringify(data))
-      router.push("/login")
+      const response = await post('user' ,'/user/create', JSON.stringify(data));
+      router.push("/login");
     } catch (error) {
       console.error('Failed to register:', error.message);
     }

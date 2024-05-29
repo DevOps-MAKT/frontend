@@ -1,4 +1,3 @@
-// components/Rating.tsx
 import React from 'react';
 
 type RatingProps = {

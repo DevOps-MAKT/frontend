@@ -1,19 +1,26 @@
 'use client'
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { post } from "../../utils/httpRequests";
-import { setToken } from "../../utils/token";
+import { getToken, setToken } from "../../utils/token";
 
 const LogInPage = () => {
 
   const router = useRouter();
 
-  const [error, setError] = useState();
+  const [error, setError] = useState(false);
 
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
+
+  useEffect(() => {
+    const token = getToken();
+    if (token !== null) {
+      router.push("/")
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,13 +32,13 @@ const LogInPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await post('user' ,'/auth/login', JSON.stringify(formData))
-      setToken(response.data)
-      router.push("/")
+      const response = await post('user' ,'/auth/login', JSON.stringify(formData));
+      setToken(response.data);
+      router.push("/");
+      window.location.reload();
     } catch (error) {
-      setError(true)
+      setError(true);
       console.error('Sign in failed:', error.message);
     }
   };
