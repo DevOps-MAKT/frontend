@@ -1,17 +1,19 @@
 'use client'
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { get, patch, put } from "../../utils/httpRequests";
-import { Button, Input, Select, SelectItem, Divider, input } from "@nextui-org/react";
-import { useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
+import InfoModal from "@/components/infoModal"
+import ConfirmationModal from "@/components/confirmationModal"
+import { get, patch, put } from "@/utils/httpRequests";
 import { clearToken, getRole } from "@/utils/token";
+import { Button, Input, Select, SelectItem, Divider } from "@nextui-org/react";
+import { useDisclosure } from '@nextui-org/react';
 
 const ProfilePage = () => {
 
   const router = useRouter();
   const [cities, setCities] = useState([]);
   const [errors, setErrors] = useState(false);
-  const [passwordErrors, setPasswordErrors] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState(true);
   const [message, setMessage] = useState("");
   const okModal = useDisclosure();
   const errorModal = useDisclosure();
@@ -236,51 +238,10 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <>
-        <Modal backdrop="blur" isOpen={okModal.isOpen} onOpenChange={okModal.onOpenChange}>
-          <ModalContent>
-            {(okOnClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">Success</ModalHeader>
-                <ModalBody>
-                  <p>
-                    {message}
-                  </p>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="primary" variant="light" onPress={okOnClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      </>
-      <>
-        <Modal backdrop="blur" isOpen={errorModal.isOpen} onOpenChange={errorModal.onOpenChange}>
-          <ModalContent>
-            {(errorOnClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">Warning</ModalHeader>
-                <ModalBody>
-                  <p>
-                    This action is irreversible. You will be signed out and won&apos;t be able to access your account again. Are you sure you want to continue?
-                  </p>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="primary" variant="light" onPress={errorOnClose}>
-                    Close
-                  </Button>
-                  <Button type="submit" color="danger" onClick={handleDeleteSubmit} >
-                    Delete
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      </>
+      <InfoModal modalObject={okModal} message={message} title="Success" />
+      <ConfirmationModal modalObject={errorModal} title="Warning" callback={handleDeleteSubmit} callbackStyle="danger" buttonContent="Delete"
+        message="This action is irreversible. You will be signed out and won&apos;t be able to access your account again. Are you sure you want to continue?" />
+
     </div>
   );
 };

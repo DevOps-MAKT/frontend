@@ -1,8 +1,9 @@
 'use client'
 import React from 'react';
+import InfoModal from "@/components/infoModal"
 import { useState, useEffect } from 'react';
 import { Input, Button, Avatar, Select, SelectItem } from '@nextui-org/react';
-import { useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
+import { useDisclosure } from '@nextui-org/react';
 import { get, post } from "@/utils/httpRequests";
 
 const AccommodationRegistration = ({ rating }) => {
@@ -73,7 +74,6 @@ const AccommodationRegistration = ({ rating }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData.tags)
     const data = {
       name: formData.name,
       location: {
@@ -87,7 +87,7 @@ const AccommodationRegistration = ({ rating }) => {
     }
 
     try {
-      const response = await post("accommodation", "/accommodation/create", data);
+      //const response = await post("accommodation", "/accommodation/create", data);
       modal.onOpen();
     } catch (error) {
       console.error('Failed to fetch cities:', error.message);
@@ -171,25 +171,7 @@ const AccommodationRegistration = ({ rating }) => {
           <Button type="submit" color="primary" >Register</Button>
         </div>
       </form>
-      <>
-        <Modal backdrop="blur" isOpen={modal.isOpen} onOpenChange={modal.onOpenChange}>
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">Success</ModalHeader>
-                <ModalBody>
-                  <p>You have successfully created a new accommodation.</p>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="primary" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      </>
+      <InfoModal modalObject={modal} message="You have successfully created a new accommodation." title="Success" />
     </div>
   );
 };
