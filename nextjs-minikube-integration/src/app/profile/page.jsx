@@ -1,13 +1,16 @@
 'use client'
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { get, post } from "../../utils/httpRequests";
-import { Button, Input, Select, SelectItem, Divider } from "@nextui-org/react";
+import { get, patch } from "../../utils/httpRequests";
+import { Button, Input, Select, SelectItem, Divider, input } from "@nextui-org/react";
+import { useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 
 const ProfilePage = () => {
 
   const [cities, setCities] = useState([]);
   const [errors, setErrors] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState(false);
+  const [message, setMessage] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -17,7 +20,7 @@ const ProfilePage = () => {
 
   const [passwordFormData, setPasswordFormData] = useState({
     password: '',
-    confirmPassword: ''
+    confirmationPassword: ''
   });
 
   const handleChange = (e) => {
@@ -26,6 +29,7 @@ const ProfilePage = () => {
       ...formData,
       [name]: value,
     });
+    checkUserFormForError();
   };
 
   const handlePasswordChange = (e) => {
@@ -34,6 +38,7 @@ const ProfilePage = () => {
       ...passwordFormData,
       [name]: value,
     });
+    checkPasswordForError();
   };
 
   const handleCityChange = (e) => {
@@ -44,14 +49,24 @@ const ProfilePage = () => {
     });
   };
 
-  const checkElementsForError = () => {
-    const inputs = document.querySelectorAll('Input');
+  const checkUserFormForError = () => {
+    const inputs = document.querySelectorAll('Input[type="text"]');
     for (const Input of inputs) {
       if (!Input.checkValidity()) {
         return setErrors(true);
       }
     }
     return setErrors(false);
+  };
+
+  const checkPasswordForError = () => {
+    const inputs = document.querySelectorAll('Input[type="password"]');
+    for (const Input of inputs) {
+      if (!Input.checkValidity()) {
+        return setPasswordErrors(true);
+      }
+    }
+    return setPasswordErrors(inputs[0].value != inputs[1].value);
   };
 
   useEffect(() => {
@@ -82,10 +97,23 @@ const ProfilePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
+    setMessage("You have successfully changed your account data.");
+    onOpen();
   };
 
   const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await patch('user' ,'/user/update-password', JSON.stringify(passwordFormData));
+      setMessage("You have successfully changed your password.");
+      onOpen();
+      setPasswordFormData({ password: '', confirmationPassword: '' });
+    } catch (error) {
+      console.error('Password update failed:', error.message);
+    }
+  };
+
+  const handleDeleteSubmit = async (e) => {
     e.preventDefault();
   };
 
@@ -94,7 +122,7 @@ const ProfilePage = () => {
       <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl">
         <h2 className="text-2xl font-bold mb-8">Account management</h2>
         <div className="text-lg text-gray-500 mb-4">Change your information</div>
-        <form onSubmit={handleSubmit} noValidate={true} onChange={checkElementsForError} >
+        <form onSubmit={handleSubmit} noValidate={true} >
           <div className="mb-4 grid grid-cols-3 gap-x-4 gap-y-6">
             <Input type="text"
               label="First name"
@@ -103,6 +131,7 @@ const ProfilePage = () => {
               value={formData.firstName}
               onChange={handleChange}
               pattern='[A-Za-z\s]+'
+              errorMessage="Please enter a valid first name"
               required />
             <Input type="text"
               label="Last name"
@@ -111,6 +140,7 @@ const ProfilePage = () => {
               value={formData.lastName}
               onChange={handleChange}
               pattern='[A-Za-z\s]+'
+              errorMessage="Please enter a valid last name"
               required />
             <Select
               selectedKeys={[formData.location]}
@@ -125,7 +155,7 @@ const ProfilePage = () => {
             </Select>
           </div>
           <div className="flex flex-row-reverse">
-            <Button type="submit" color="primary" disabled={errors} >
+            <Button type="submit" color="primary" isDisabled={errors} >
               Confirm changes
             </Button>
           </div>
@@ -133,7 +163,7 @@ const ProfilePage = () => {
 
         <Divider orientation="horizontal" className="my-8" />
 
-        <div className="text-lg text-gray-500 mb-4">Change password</div>
+        <div className="text-lg text-gray-500 mb-4">Change your password</div>
         <form onSubmit={handlePasswordSubmit} noValidate={true} >
           <div className="mb-4 grid grid-cols-2 gap-x-4 gap-y-6">
             <Input type="password"
@@ -143,18 +173,20 @@ const ProfilePage = () => {
               value={passwordFormData.password}
               onChange={handlePasswordChange}
               pattern='[A-Za-z0-9]{6,}'
+              errorMessage="Please enter a valid password"
               required />
             <Input type="password"
               label="Confirm password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={passwordFormData.confirmPassword}
+              id="confirmationPassword"
+              name="confirmationPassword"
+              value={passwordFormData.confirmationPassword}
               onChange={handlePasswordChange}
               pattern='[A-Za-z0-9]{6,}'
+              errorMessage="Please enter a valid password"
               required />
           </div>
           <div className="flex flex-row-reverse">
-            <Button type="submit" color="primary" disabled={errors} >
+            <Button type="submit" color="primary" isDisabled={passwordErrors} >
               Change password
             </Button>
           </div>
@@ -166,11 +198,33 @@ const ProfilePage = () => {
           <div className="text-gray-700 text-sm pr-4">
             Warning! This action is irreversible. You won&apos;t be able to access your account if you terminate it.
           </div>
-          <Button type="submit" color="danger" disabled={errors} >
+          <Button type="submit" color="danger" onClick={handleDeleteSubmit} >
             Delete
           </Button>
         </div>
       </div>
+
+      <>
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+                <ModalBody>
+                  <p>
+                    {message}
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" variant="light" onPress={onClose}>
+                    Close
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </>
     </div>
   );
 };
