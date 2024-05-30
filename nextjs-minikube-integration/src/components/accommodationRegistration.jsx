@@ -4,7 +4,7 @@ import InfoModal from "@/components/infoModal"
 import { useState, useEffect } from 'react';
 import { Input, Button, Avatar, Select, SelectItem } from '@nextui-org/react';
 import { useDisclosure } from '@nextui-org/react';
-import { get, post } from "@/utils/httpRequests";
+import { get, post, postImage } from "@/utils/httpRequests";
 
 const AccommodationRegistration = ({ rating }) => {
   const [locations, setLocations] = useState([]);
@@ -19,7 +19,7 @@ const AccommodationRegistration = ({ rating }) => {
     location: '',
   });
 
-  const [image, setImage] = useState(null);
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -46,7 +46,7 @@ const AccommodationRegistration = ({ rating }) => {
   }, []);
 
   const checkForErrors = () => {
-    setErrors(formData.name === "" || formData.minGuests === "" || formData.maxGuests === "" || formData.location === "" || image === null);
+    setErrors(formData.name === "" || formData.minGuests === "" || formData.maxGuests === "" || formData.location === "" || photo === null);
   }
 
   const handleChange = (e) => {
@@ -79,28 +79,22 @@ const AccommodationRegistration = ({ rating }) => {
     checkForErrors();
   };
 
-  const handleImageChange = (event) => {
-    setImage(event.target.files[0]);
+  const handlePhotoChange = (event) => {
+    setPhoto(event.target.files[0]);
 
     checkForErrors();
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = {
-      name: formData.name,
-      location: {
-        city: formData.location.split(", ")[0],
-        country: formData.location.split(", ")[1],
-      },
-      accommodationFeatures: formData.tags.split(",").map((tag) => ({ feature: tag })),
-      minimumNoGuests: formData.minGuests,
-      maximumNoGuests: formData.maxGuests,
-      photographs: [],
+    const data = new FormData();
+    data.append('file', photo);
+    data.append('fileName', photo.name);
+    for (const [key, value] of Object.entries(formData)) {
+      data.append(key, value);
     }
-
     try {
-      const response = await post("accommodation", "/accommodation/create", data);
+      await postImage("accommodation", "/accommodation/create", data);
       modal.onOpen();
     } catch (error) {
       console.error('Failed to create accommodation:', error.message);
@@ -176,10 +170,10 @@ const AccommodationRegistration = ({ rating }) => {
           />
 
           <div className="flex col-span-2 space-x-4">
-            <input type="file" accept="image/*" onChange={handleImageChange} required
+            <input type="file" accept="image/*" onChange={handlePhotoChange} required
               className="text-sm text-slate-500 file:mr-4 file:p-4 file:rounded-lg my-auto file:border-0 file:text-sm file:text-gray-700 hover:file:cursor-pointer hover:file:bg-gray-200"
             />
-            {image && <Avatar src={URL.createObjectURL(image)} size="lg" radius="lg" />}
+            {photo && <Avatar src={URL.createObjectURL(photo)} size="lg" radius="lg" />}
           </div>
         </div>
 
