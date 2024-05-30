@@ -48,6 +48,24 @@ export const post = async (service, route, body) => {
   }
 };
 
+export const postImage = async (service, route, body) => {
+  try {
+    const token = getToken();
+    const response = await axios.post(`${services[service]}${route}`, body, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+    if (response.status >= 300) {
+      throw new Error(`Status ${response.status}: ${response.statusText}`)
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const get = async (service, route) => {
   try {
     const response = await httpService.get(`${services[service]}${route}`, headers);
