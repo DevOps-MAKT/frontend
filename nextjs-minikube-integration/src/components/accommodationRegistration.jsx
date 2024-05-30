@@ -8,6 +8,7 @@ import { get, post } from "@/utils/httpRequests";
 
 const AccommodationRegistration = ({ rating }) => {
   const [locations, setLocations] = useState([]);
+  const [errors, setErrors] = useState(true);
   const [tags, setTags] = useState([]);
   const modal = useDisclosure();
   const [formData, setFormData] = useState({
@@ -44,12 +45,18 @@ const AccommodationRegistration = ({ rating }) => {
     fetchTags();
   }, []);
 
+  const checkForErrors = () => {
+    setErrors(formData.name === "" || formData.minGuests === "" || formData.maxGuests === "" || formData.location === "" || image === null);
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+
+    checkForErrors();
   };
 
   const handleLocationChange = (e) => {
@@ -58,6 +65,8 @@ const AccommodationRegistration = ({ rating }) => {
       ...formData,
       location,
     });
+
+    checkForErrors();
   };
 
   const handleTagsChange = (e) => {
@@ -66,10 +75,14 @@ const AccommodationRegistration = ({ rating }) => {
       ...formData,
       tags,
     });
+
+    checkForErrors();
   };
 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
+
+    checkForErrors();
   };
 
   const handleSubmit = async (event) => {
@@ -87,10 +100,10 @@ const AccommodationRegistration = ({ rating }) => {
     }
 
     try {
-      //const response = await post("accommodation", "/accommodation/create", data);
+      const response = await post("accommodation", "/accommodation/create", data);
       modal.onOpen();
     } catch (error) {
-      console.error('Failed to fetch cities:', error.message);
+      console.error('Failed to create accommodation:', error.message);
     }
   };
 
@@ -103,6 +116,7 @@ const AccommodationRegistration = ({ rating }) => {
           <Input
             className="col-span-2"
             label="Name"
+            pattern="[A-za-z\s]{6,}"
             name="name"
             type="text"
             placeholder=""
@@ -144,6 +158,7 @@ const AccommodationRegistration = ({ rating }) => {
             type="number"
             name="minGuests"
             placeholder=""
+            min="1"
             value={formData.minGuests}
             onChange={handleChange}
             required
@@ -154,6 +169,7 @@ const AccommodationRegistration = ({ rating }) => {
             type="number"
             name="maxGuests"
             placeholder=""
+            min="1"
             value={formData.maxGuests}
             onChange={handleChange}
             required
@@ -168,7 +184,7 @@ const AccommodationRegistration = ({ rating }) => {
         </div>
 
         <div className="w-full flex justify-end mt-4">
-          <Button type="submit" color="primary" >Register</Button>
+          <Button type="submit" color="primary" isDisabled={errors} >Register</Button>
         </div>
       </form>
       <InfoModal modalObject={modal} message="You have successfully created a new accommodation." title="Success" />
