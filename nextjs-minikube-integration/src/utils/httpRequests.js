@@ -1,10 +1,15 @@
 import axios from 'axios';
 import { getToken, clearToken } from './token';
+import { env } from 'next-runtime-env';
 
-const services = {
-    'user': 'http://localhost:8001/user-service',
-    'accommodation': 'http://localhost:8002/accommodation-service',
+const services = (service) => {
+  return {
+    'user': env('NEXT_PUBLIC_USER_SERVICE_API'),
+    'accommodation': env('NEXT_PUBLIC_ACCOMMODATION_SERVICE_API'),
+    'reservation': env('NEXT_PUBLIC_RESERVATION_SERVICE_API')
+  }[service]
 }
+
 
 const headers = {headers: {'Content-Type': 'application/json'}}
 
@@ -38,7 +43,7 @@ httpService.interceptors.response.use(
 
 export const post = async (service, route, body) => {
   try {
-    const response = await httpService.post(`${services[service]}${route}`, body, headers);
+    const response = await httpService.post(`${services(service)}${route}`, body, headers);
     if (response.status >= 300) {
       throw new Error(`Status ${response.status}: ${response.statusText}`)
     }
@@ -51,7 +56,7 @@ export const post = async (service, route, body) => {
 export const postImage = async (service, route, body) => {
   try {
     const token = getToken();
-    const response = await axios.post(`${services[service]}${route}`, body, {
+    const response = await axios.post(`${services(service)}${route}`, body, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`,
@@ -68,7 +73,7 @@ export const postImage = async (service, route, body) => {
 
 export const get = async (service, route) => {
   try {
-    const response = await httpService.get(`${services[service]}${route}`, headers);
+    const response = await httpService.get(`${services(service)}${route}`, headers);
     if (response.status !== 200) {
       throw new Error(`Status ${response.status}: ${response.statusText}`)
     }
@@ -80,7 +85,7 @@ export const get = async (service, route) => {
 
 export const patch = async (service, route, body) => {
   try {
-    const response = await httpService.patch(`${services[service]}${route}`, body, headers);
+    const response = await httpService.patch(`${services(service)}${route}`, body, headers);
     if (response.status >= 300) {
       throw new Error(`Status ${response.status}: ${response.statusText}`)
     }
@@ -92,7 +97,7 @@ export const patch = async (service, route, body) => {
 
 export const put = async (service, route, body) => {
   try {
-    const response = await httpService.put(`${services[service]}${route}`, body, headers);
+    const response = await httpService.put(`${services(service)}${route}`, body, headers);
     if (response.status >= 300) {
       throw new Error(`Status ${response.status}: ${response.statusText}`)
     }
