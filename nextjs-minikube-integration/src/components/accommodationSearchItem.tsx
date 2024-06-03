@@ -2,7 +2,7 @@ import { Button, Chip } from '@nextui-org/react';
 import Image from 'next/image';
 import Rating from './rating';
 
-const Accommodation = ({accommodation}: any) => {
+const AccommodationSearchItem = ({accommodation}: any) => {
   return (
     <div key={accommodation.id} className="flex flex-row justify-between bg-white shadow-lg rounded-lg w-[800px] p-4 space-x-4 border border-gray-100">
       <div className="flex flex-row space-x-4">
@@ -29,4 +29,4 @@ const Accommodation = ({accommodation}: any) => {
     </div>
   );
 };
-export default Accommodation;
+export default AccommodationSearchItem;

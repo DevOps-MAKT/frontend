@@ -1,14 +1,12 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import AccommodationRegistration from "@/components/accommodationRegistration";
+import AccommodationHostSearch from '@/components/accommodationHostSearch';
 
 const AccommodationManagementPage = () => {
 
-  const [selected, setSelected] = useState('new');
+  const [selected, setSelected] = useState('view');
   const menuItems = [["view", "View your accommodations"], ["new", "Register new accommodation"]];
-
-  useEffect(() => {
-  }, []);
 
   return (
     <div className="min-h-screen space-x-10 flex items-start justify-center bg-gray-50 py-12 px-4">
@@ -29,11 +27,9 @@ const AccommodationManagementPage = () => {
         ))}
 
       </div>
-      <div className="max-w-3xl w-full bg-white p-8 rounded shadow-md">
+      <div className="max-w-4xl w-full bg-white p-8 rounded shadow-md">
         {selected === "view" ?
-          <div>
-            <h2 className="text-2xl font-bold mb-4">View your accommodations</h2>
-          </div>
+          <AccommodationHostSearch />
           :
           <AccommodationRegistration />
         }

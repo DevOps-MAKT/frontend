@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import { get } from "../../utils/httpRequests"
-import Accommodation from "@/components/accommodation";
+import AccommodationSearchItem from "@/components/accommodationSearchItem";
 
 const SearchPage = () => {
 
@@ -29,7 +29,7 @@ const SearchPage = () => {
       ) : (
       <div className="min-h-screen py-8 flex flex-col items-center space-y-6">
         {accommodations.map((accommodation, index) => (
-          <Accommodation key={index} accommodation={accommodation} />
+          <AccommodationSearchItem key={index} accommodation={accommodation} />
         ))}
       </div>
       )}
