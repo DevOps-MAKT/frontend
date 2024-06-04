@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import Rating from '@/components/rating';
 import { get } from "@/utils/httpRequests";
 import { env } from 'next-runtime-env';
+import AvailabilityCreation from "@/components/availabilityCreation"
 import AvailabilityModification from "@/components/availabilityModification"
+import PriceModification from "@/components/priceModificaiton"
 
 const AccommodationPage = ({ params }) => {
   const { id } = params;
   const [isOwner, setIsOwner] = useState(false);
-  const [selected, setSelected] = useState("availability");
+  const [selected, setSelected] = useState("create-availability");
   const [accommodation, setAccommodation] = useState({
     id: 0,
     name: '',
@@ -94,35 +96,17 @@ const AccommodationPage = ({ params }) => {
                 tab: "max-w-fit px-0 h-12",
               }}
             >
-              <Tab
-                key="reviews"
-                title={
-                  <div className="flex items-center space-x-2">
-                    <span>Reviews</span>
-                  </div>
-                }
-              >
-                Reviews
+            <Tab key="reviews" title="Reviews" >
+              Reviews
+            </Tab>
+              <Tab key="price" title="Modify Price" >
+                <PriceModification accommodation={accommodation} ></PriceModification>
               </Tab>
-              <Tab
-                key="availability"
-                title={
-                  <div className="flex items-center space-x-2">
-                    <span>Availability & Price</span>
-                  </div>
-                }
-              >
+              <Tab key="create-availability" title="Create New Availability" >
+                <AvailabilityCreation accommodation={accommodation} ></AvailabilityCreation>
+              </Tab>
+              <Tab key="modify-availability" title="Modify Availability" >
                 <AvailabilityModification accommodation={accommodation} ></AvailabilityModification>
-              </Tab>
-              <Tab
-                key="special-price"
-                title={
-                  <div className="flex items-center space-x-2">
-                    <span>Special price</span>
-                  </div>
-                }
-              >
-                Modify special prices
               </Tab>
             </Tabs>
           ) : (
@@ -137,24 +121,10 @@ const AccommodationPage = ({ params }) => {
                 tab: "max-w-fit px-0 h-12",
               }}
             >
-              <Tab
-                key="reviews"
-                title={
-                  <div className="flex items-center space-x-2">
-                    <span>Reviews</span>
-                  </div>
-                }
-              >
+              <Tab key="reviews" title="Reviews" >
                 Reviews
               </Tab>
-              <Tab
-                key="book"
-                title={
-                  <div className="flex items-center space-x-2">
-                    <span>Book</span>
-                  </div>
-                }
-              >
+              <Tab key="book" title="Book" >
                 Make a booking
               </Tab>
             </Tabs>
