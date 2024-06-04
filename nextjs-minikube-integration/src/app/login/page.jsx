@@ -1,8 +1,8 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { post } from "../../utils/httpRequests";
-import { getToken, setToken } from "../../utils/token";
+import { post } from "@/utils/httpRequests";
+import { getToken, setToken } from "@/utils/token";
 
 const LogInPage = () => {
 

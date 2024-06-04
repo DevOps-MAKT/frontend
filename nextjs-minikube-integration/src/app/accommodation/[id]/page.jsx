@@ -3,31 +3,23 @@ import { Tabs, Tab, Chip } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Rating from '@/components/rating';
 import { get } from "@/utils/httpRequests";
+import { env } from 'next-runtime-env';
+import AvailabilityModification from "@/components/availabilityModification"
 
 const AccommodationPage = ({ params }) => {
   const { id } = params;
   const [isOwner, setIsOwner] = useState(false);
-  const [selected, setSelected] = useState("reviews");
+  const [selected, setSelected] = useState("availability");
   const [accommodation, setAccommodation] = useState({
     id: 0,
     name: '',
     location: { city: '', country: '' },
     price: '',
     accommodationFeatures: [],
+    availabilityPeriods: [],
     avgRating: 0,
     imageUrl: '',
   });
-  /*
-  const accommodation = {
-    id: 1,
-    name: 'Luxury Villa in Bali',
-    location: { city: 'Bali', country: 'Indonesia' },
-    price: '$250/night',
-    accommodationFeatures: [{ feature: 'WiFi' }, { feature: 'Kitchen' }, { feature: 'Bedroom' }, { feature: 'Pool' }, { feature: 'Microwave' }, { feature: 'Bathroom' }, { feature: 'Room service' }],
-    avgRating: 3.8,
-    imageUrl: '/images/property1.jpg',
-  };
-  */
 
   useEffect(() => {
 
@@ -48,7 +40,6 @@ const AccommodationPage = ({ params }) => {
       try {
         const response = await get('accommodation', `/accommodation/${id}`);
         setAccommodation(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Failed to fetch accommodations:', error.message);
       }
@@ -81,7 +72,7 @@ const AccommodationPage = ({ params }) => {
         </div>
 
 
-        <img src="/apartment.webp" alt="" className="w-full h-96 object-cover rounded-lg" />
+        <img src={env('NEXT_PUBLIC_ACCOMMODATION_SERVICE_API') + '/photo/' + accommodation.photographURL} alt="" className="w-full h-96 object-cover rounded-lg" />
 
 
         <div className="flex flex-row flex-wrap gap-2">
@@ -117,11 +108,11 @@ const AccommodationPage = ({ params }) => {
                 key="availability"
                 title={
                   <div className="flex items-center space-x-2">
-                    <span>Availability</span>
+                    <span>Availability & Price</span>
                   </div>
                 }
               >
-                Change availability
+                <AvailabilityModification accommodation={accommodation} ></AvailabilityModification>
               </Tab>
               <Tab
                 key="special-price"

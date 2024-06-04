@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
-import { get } from "../../utils/httpRequests"
+import { get } from "@/utils/httpRequests"
 import AccommodationSearchItem from "@/components/accommodationSearchItem";
 
 const SearchPage = () => {

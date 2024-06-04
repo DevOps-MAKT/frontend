@@ -232,7 +232,7 @@ const ProfilePage = () => {
           <div className="text-gray-700 text-sm pr-4">
             Warning! This action is irreversible. You won&apos;t be able to access your account if you terminate it.
           </div>
-          <Button color="danger" onClick={errorModal.onOpen} >
+          <Button color="danger" onPress={errorModal.onOpen} >
             Delete
           </Button>
         </div>

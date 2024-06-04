@@ -1,8 +1,11 @@
 import { Button, Chip } from '@nextui-org/react';
+import { useRouter } from "next/navigation";
 import Image from 'next/image';
 import Rating from './rating';
 
 const AccommodationSearchItem = ({accommodation}: any) => {
+  const router = useRouter();
+
   return (
     <div key={accommodation.id} className="flex flex-row justify-between bg-white shadow-lg rounded-lg w-[800px] p-4 space-x-4 border border-gray-100">
       <div className="flex flex-row space-x-4">
@@ -22,8 +25,8 @@ const AccommodationSearchItem = ({accommodation}: any) => {
       <div className="h-64 flex flex-col justify-between items-end">
         <Rating rating={accommodation.avgRating} />
         <div>
-          <div className="text-lg font-bold text-primary text-right">${accommodation.price}</div>
-          <Button color='primary'>View Details</Button>
+          <div className="text-lg font-bold text-primary text-right">${accommodation.price.toFixed(2)}</div>
+          <Button color='primary' onPress={() => {router.push(`/accommodation/${accommodation.id}`)}}>View Details</Button>
         </div>
       </div>
     </div>

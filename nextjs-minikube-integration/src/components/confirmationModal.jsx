@@ -17,7 +17,7 @@ const ConfirmationModal = ({ modalObject, title, message, callback, callbackStyl
                   <Button color="primary" variant="light" onPress={onClose}>
                     Close
                   </Button>
-                  <Button type="submit" color={callbackStyle} onClick={callback} >
+                  <Button type="submit" color={callbackStyle} onPress={callback} >
                     {buttonContent}
                   </Button>
                 </ModalFooter>

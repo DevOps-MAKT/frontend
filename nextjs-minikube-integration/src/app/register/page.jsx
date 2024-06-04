@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
-import { post, get } from "../../utils/httpRequests"
+import { post, get } from "@/utils/httpRequests"
 
 const RegistrationPage = () => {
 

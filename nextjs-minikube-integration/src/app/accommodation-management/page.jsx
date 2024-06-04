@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import AccommodationRegistration from "@/components/accommodationRegistration";
 import AccommodationHostSearch from '@/components/accommodationHostSearch';
+import { Button } from '@nextui-org/react';
 
 const AccommodationManagementPage = () => {
 
@@ -12,9 +13,10 @@ const AccommodationManagementPage = () => {
     <div className="min-h-screen space-x-10 flex items-start justify-center bg-gray-50 py-12 px-4">
       <div className="space-y-4 flex flex-col justify-left ">
         {menuItems.map(([key, item]) => (
-          <button
+          <Button
             key={key}
-            onClick={() => setSelected(key)}
+            color="light"
+            onPress={() => setSelected(key)}
             className={`text-xl flex ${selected === key ? 'text-primary' : 'text-gray-400'} transition duration-100 ease-in-out`}
           >
             <svg className={`w-6 h-6 mr-2 transition duration-100 ease-in-out ${selected === key ? 'text-primary' : 'text-transparent'}`}
@@ -23,7 +25,7 @@ const AccommodationManagementPage = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="m9 5 7 7-7 7" />
             </svg>
             {item}
-          </button>
+          </Button>
         ))}
 
       </div>

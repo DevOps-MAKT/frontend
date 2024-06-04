@@ -4,35 +4,6 @@ import AccommodationSearchItem from './accommodationSearchItem';
 import { get } from '@/utils/httpRequests';
 
 const AccommodationHostSearch = () => {
-  const properties = [
-    {
-      id: 1,
-      name: 'Luxury Villa in Bali',
-      location: {city: 'Bali', country: 'Indonesia'},
-      price: '$250/night',
-      accommodationFeatures: [{feature: 'WiFi'}, {feature: 'Kitchen'}],
-      avgRating: 3.8,
-      imageUrl: '/images/property1.jpg',
-    },
-    {
-      id: 2,
-      name: 'Cozy Apartment in New York',
-      location: {city: 'New York', country: 'USA'},
-      accommodationFeatures: [{feature: 'Pool'}, {feature: 'Kitchen'}],
-      price: '$180/night',
-      avgRating: 1.5,
-      imageUrl: '/images/property2.jpg',
-    },
-    {
-      id: 3,
-      name: 'Modern House in Tokyo',
-      location: {city: 'Tokyo', country: 'Japan'},
-      accommodationFeatures: [{feature: 'WiFi'}, {feature: 'TV'}],
-      price: '$300/night',
-      avgRating: 4.7,
-      imageUrl: '/images/property3.jpg',
-    },
-  ];
   const [accommodations, setAccommodations] = useState([]);
 
   useEffect(() => {
@@ -40,8 +11,7 @@ const AccommodationHostSearch = () => {
       try {
         const queryParams = window.location.href.split('?')[1] || '';
         const response = await get('accommodation', '/accommodation/my-accommodations');
-        //setAccommodations(response.data)
-        setAccommodations(properties);
+        setAccommodations(response.data)
       } catch (error) {
         console.error('Failed to fetch accommodation:', error.message);
       }
