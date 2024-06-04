@@ -52,7 +52,7 @@ const AvailabilityCreation = ({ accommodation }) => {
     }
     try {
       setAvailableRanges(prevRanges => [...prevRanges, range]);
-      //await post('accommodation', `/accommodation/change-availability-info`, data);
+      await post('accommodation', `/accommodation/change-availability-info`, data);
     } catch (error) {
       console.error('Failed to add availability period:', error.message);
     }
