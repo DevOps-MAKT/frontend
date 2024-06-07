@@ -7,6 +7,8 @@ import { env } from 'next-runtime-env';
 import AvailabilityCreation from "@/components/availabilityCreation"
 import AvailabilityModification from "@/components/availabilityModification"
 import PriceModification from "@/components/priceModificaiton"
+import Booking from "@/components/book"
+import { getRole } from "@/utils/token";
 
 const AccommodationPage = ({ params }) => {
   const { id } = params;
@@ -27,6 +29,7 @@ const AccommodationPage = ({ params }) => {
 
     const fetchMyAccommodations = async () => {
       try {
+        if (getRole() !== 'host') return;
         const response = await get('accommodation', '/accommodation/my-accommodations');
         response.data.forEach(element => {
           if (element.id == id) {
@@ -42,6 +45,7 @@ const AccommodationPage = ({ params }) => {
       try {
         const response = await get('accommodation', `/accommodation/${id}`);
         setAccommodation(response.data);
+        console.log(response.data)
       } catch (error) {
         console.error('Failed to fetch accommodations:', error.message);
       }
@@ -125,7 +129,7 @@ const AccommodationPage = ({ params }) => {
                 Reviews
               </Tab>
               <Tab key="book" title="Book" >
-                Make a booking
+                <Booking accommodation={accommodation} />
               </Tab>
             </Tabs>
           )}
