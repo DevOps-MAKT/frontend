@@ -22,7 +22,7 @@ const AccommodationHostSearch = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       {accommodations.length === 0 ? (
-      <div className="text-gray-300 py-8">You don't have any accommodations.</div>
+      <div className="text-gray-300 py-8">You don&apos;t have any accommodations.</div>
       ) : (
       <div className="min-h-screen flex flex-col items-center space-y-6 w-full">
         <h2 className="text-2xl font-bold w-full">View your accommodations</h2>
