@@ -89,7 +89,7 @@ const RegistrationPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-[calc(100vh-56px)]">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl">
         <h2 className="text-2xl font-bold mb-4">Sign up for a new account</h2>
         <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-2 gap-x-4 gap-y-6" noValidate={true} onChange={checkElementsForError} >

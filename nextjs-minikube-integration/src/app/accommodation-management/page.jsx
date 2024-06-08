@@ -7,7 +7,7 @@ import { Tabs, Tab } from "@nextui-org/react";
 const AccommodationManagementPage = () => {
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-gray-50 py-12">
+    <div className="min-h-[calc(100vh-56px)] flex items-start justify-center py-12">
       <div className="flex w-full flex-col max-w-4xl">
         <Tabs
           aria-label="Options"

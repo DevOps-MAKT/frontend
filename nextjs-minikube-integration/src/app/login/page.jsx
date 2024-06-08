@@ -44,8 +44,8 @@ const LogInPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white p-8 rounded shadow-md w-full max-w-md">
+    <div className="min-h-[calc(100vh-56px)] flex items-center justify-center">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <div>
           <h2 className="text-2xl font-bold mb-4">Sign in to your account</h2>
         </div>

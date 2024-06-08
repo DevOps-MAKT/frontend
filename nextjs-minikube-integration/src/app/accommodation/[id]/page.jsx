@@ -56,7 +56,7 @@ const AccommodationPage = ({ params }) => {
   }, []);
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-gray-100 py-12">
+    <div className="flex justify-center items-start min-h-[calc(100vh-56px)] py-12">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl space-y-4">
         <div className="flex flex-row justify-between">
           <div>

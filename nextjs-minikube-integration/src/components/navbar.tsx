@@ -146,37 +146,23 @@ const MyNavbar = () => {
         </Button>
       </form>
 
-      <div className={role === "" ? 'pt-[6px] flex flex-row space-x-4' : 'hidden'}>
-        <div>
-          <Link className="text-white" href="login"><LogInIcon /></Link>
-        </div>
+      <div className={role === "" ? 'my-auto flex flex-row space-x-4' : 'hidden'}>
+        <Link className="text-white" href="login"><LogInIcon /></Link>
+
       </div>
 
-      <div className={role === 'guest' ? 'pt-[6px] flex flex-row space-x-4' : 'hidden'}>
-        <div>
-          <Link className="text-white" href="notifications"><BellIcon /></Link>
-        </div>
-        <div>
-          <Link className="text-white" href="profile"><PersonIcon /></Link>
-        </div>
-        <div>
-          <Link className="text-white" href="login" onClick={logOut}><LogOutIcon /></Link>
-        </div>
+      <div className={role === 'guest' ? 'my-auto flex flex-row space-x-4' : 'hidden'}>
+        <Link className="text-white" href="notifications"><BellIcon /></Link>
+        <Link className="text-white" href="profile"><PersonIcon /></Link>
+        <Link className="text-white" href="login" onClick={logOut}><LogOutIcon /></Link>
+
       </div>
 
-      <div className={role === "host" ? 'pt-[6px] flex flex-row space-x-4' : 'hidden'}>
-        <div>
-          <Link className="text-white" href="notifications"><BellIcon /></Link>
-        </div>
-        <div>
-          <Link className="text-white" href="accommodation-management"><HouseIcon /></Link>
-        </div>
-        <div>
-          <Link className="text-white" href="profile"><PersonIcon /></Link>
-        </div>
-        <div>
-          <Link className="text-white" href="login" onClick={logOut}><LogOutIcon /></Link>
-        </div>
+      <div className={role === "host" ? 'my-auto flex flex-row space-x-4' : 'hidden'}>
+        <Link className="text-white" href="notifications"><BellIcon /></Link>
+        <Link className="text-white" href="accommodation-management"><HouseIcon /></Link>
+        <Link className="text-white" href="profile"><PersonIcon /></Link>
+        <Link className="text-white" href="login" onClick={logOut}><LogOutIcon /></Link>
       </div>
     </nav>
   );
