@@ -4,9 +4,9 @@ import InfoModal from "@/components/infoModal"
 import { useState, useEffect } from 'react';
 import { Input, Button, Avatar, Select, SelectItem } from '@nextui-org/react';
 import { useDisclosure } from '@nextui-org/react';
-import { get, post, postImage } from "@/utils/httpRequests";
+import { get, postImage } from "@/utils/httpRequests";
 
-const AccommodationRegistration = ({ rating }) => {
+const AccommodationRegistration = () => {
   const [locations, setLocations] = useState([]);
   const [errors, setErrors] = useState(true);
   const [tags, setTags] = useState([]);
@@ -103,8 +103,7 @@ const AccommodationRegistration = ({ rating }) => {
 
   return (
 
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Register a new accommodation</h2>
+    <div className="max-w-4xl w-full bg-white p-8 rounded shadow-md">
       <form className="w-full" onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4">
           <Input
