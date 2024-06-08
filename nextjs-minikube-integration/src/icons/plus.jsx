@@ -1,5 +1,3 @@
-import React from "react";
-
 export const PlusIcon = (props) => (
   <svg
     aria-hidden="true"
