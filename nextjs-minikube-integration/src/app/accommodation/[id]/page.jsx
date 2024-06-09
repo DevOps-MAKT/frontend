@@ -7,12 +7,17 @@ import { env } from 'next-runtime-env';
 import AvailabilityCreation from "@/components/availabilityCreation"
 import AvailabilityModification from "@/components/availabilityModification"
 import PriceModification from "@/components/priceModificaiton"
+import AccommodationReviews from "@/components/accommodationReviews"
 import Booking from "@/components/book"
-import { getRole } from "@/utils/token";
+import { getEmail, getRole } from "@/utils/token";
 
 const AccommodationPage = ({ params }) => {
   const { id } = params;
   const [isOwner, setIsOwner] = useState(false);
+  const [canReviewAcc, setCanReviewAcc] = useState(false);
+  const [canReviewHost, setCanReviewHost] = useState(false);
+  const [accommodationReviews, setAccommodationReviews] = useState([]);
+  const [hostReviews, setHostReviews] = useState([]);
   const [selected, setSelected] = useState("create-availability");
   const [accommodation, setAccommodation] = useState({
     id: 0,
@@ -50,8 +55,21 @@ const AccommodationPage = ({ params }) => {
       }
     };
 
+    const fetchAccommodationReviews = async () => {
+      try {
+        const response = await get('user', `/user/accommodation-reviews-info/${id}`);
+        setAccommodationReviews(response.data.reviews);
+        if (getRole() === 'guest' && !response.data.reviews.some(review => review.guestEmail === getEmail())) {
+          setCanReviewAcc(true);
+        }
+      } catch (error) {
+        console.error('Failed to fetch accommodationReviews:', error.message);
+      }
+    };
+
     fetchMyAccommodations();
     fetchAccommodation();
+    fetchAccommodationReviews();
   }, []);
 
   return (
@@ -99,9 +117,9 @@ const AccommodationPage = ({ params }) => {
                 tab: "max-w-fit px-0 h-12",
               }}
             >
-            <Tab key="reviews" title="Reviews" >
-              Reviews
-            </Tab>
+              <Tab key="reviews" title="Reviews" >
+                Reviews
+              </Tab>
               <Tab key="price" title="Modify Price" >
                 <PriceModification accommodation={accommodation} ></PriceModification>
               </Tab>
@@ -125,7 +143,7 @@ const AccommodationPage = ({ params }) => {
               }}
             >
               <Tab key="reviews" title="Reviews" >
-                Reviews
+                <AccommodationReviews accommodationId={id} hostEmail={accommodation.hostEmail} canReviewAccommodation={canReviewAcc} reviews={accommodationReviews} />
               </Tab>
               <Tab key="book" title="Book" >
                 <Booking accommodation={accommodation} />

@@ -10,7 +10,7 @@ const Booking = ({ accommodation }) => {
   const [noGuests, setNoGuests] = useState();
 
   const timestampToDate = (unixTimestamp) => {
-    const date = new Date(unixTimestamp * 1000);
+    const date = new Date(unixTimestamp);
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
@@ -55,6 +55,8 @@ const Booking = ({ accommodation }) => {
       endDate: dateToTimestamp(range.end),
       noGuests: noGuests,
     };
+    console.log(data)
+    return;
     try {
       await post('reservation', `/reservation/create`, data);
     } catch (error) {
