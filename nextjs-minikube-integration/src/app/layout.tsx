@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navbar";
+import MyNavbar from "@/components/navbar";
 import * as React from "react";
 import {NextUIProvider} from "@nextui-org/react";
 import { PublicEnvScript } from 'next-runtime-env';
@@ -26,7 +26,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <NextUIProvider>
-          <Navbar />
+          <MyNavbar />
           {children}
         </NextUIProvider>
       </body>

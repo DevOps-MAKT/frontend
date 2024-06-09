@@ -152,7 +152,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-[calc(100vh-56px)]">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl">
         <h2 className="text-2xl font-bold mb-8">Account management</h2>
         <div className="text-lg text-gray-500 mb-4">Change your information</div>

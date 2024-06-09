@@ -27,7 +27,7 @@ const SearchPage = () => {
       {accommodations.length === 0 ? (
       <div className="text-gray-300 py-8">No accommodations match your search.</div>
       ) : (
-      <div className="min-h-screen py-8 flex flex-col items-center space-y-6">
+      <div className="min-h-[calc(100vh-56px)] py-8 flex flex-col items-center space-y-6">
         {accommodations.map((accommodation, index) => (
           <AccommodationSearchItem key={index} accommodation={accommodation} />
         ))}

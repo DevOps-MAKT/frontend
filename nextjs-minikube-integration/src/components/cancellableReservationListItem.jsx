@@ -1,7 +1,7 @@
 import { Button } from '@nextui-org/react';
 import Image from 'next/image';
 
-const ReservationListItem = ( {reservation, cancelReservationModal, approveReservationModal, setChosenReservation } ) => {
+const CancellableReservationListItem = ( {reservation, modal, setChosenReservation } ) => {
 
   const timestampToDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp);
@@ -11,14 +11,9 @@ const ReservationListItem = ( {reservation, cancelReservationModal, approveReser
     return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   }
 
-  const approveReservation = (id) => {
-    setChosenReservation(id);
-    approveReservationModal.onOpen();
-  }
-
   const cancelReservation = (id) => {
     setChosenReservation(id);
-    cancelReservationModal.onOpen();
+    modal.onOpen();
   }
 
   return (
@@ -31,9 +26,6 @@ const ReservationListItem = ( {reservation, cancelReservationModal, approveReser
           <div className="text-xl font-semibold">{reservation.accommodation.name}</div>
           <p className="text-gray-600">{reservation.accommodation.location.city}, {reservation.accommodation.location.country}</p>
           <p className="mt-4 text-gray-600">
-            Guest: <span className='text-black'>{reservation.guestEmail}</span>
-          </p>
-          <p className="mt-4 text-gray-600">
             Number of guests: <span className='text-black'>{reservation.noGuests}</span>
           </p>
           <p className="mt-4 text-gray-600">
@@ -44,12 +36,9 @@ const ReservationListItem = ( {reservation, cancelReservationModal, approveReser
         </div>
       </div>
       <div className="h-64 flex flex-col justify-end items-end">
-        <div className='flex flex-row space-x-4'>
           <Button color='danger' onPress={() => cancelReservation(reservation.id)} >Cancel</Button>
-          <Button color='primary' onPress={() => approveReservation(reservation.id)} >Approve</Button>
-        </div>
       </div>
     </div>
   );
 };
-export default ReservationListItem;
+export default CancellableReservationListItem;

@@ -1,10 +1,8 @@
 'use client'
-import AccommodationRegistration from "@/components/accommodationRegistration";
-import AccommodationHostSearch from '@/components/accommodationHostSearch';
-import UpcomingHostReservations from '@/components/upcomingHostReservations';
+import UpcomingGuestReservations from '@/components/upcomingGuestReservations';
 import { Tabs, Tab } from "@nextui-org/react";
 
-const AccommodationManagementPage = () => {
+const MyBookingsPage = () => {
 
   return (
     <div className="min-h-[calc(100vh-56px)] flex items-start justify-center py-12">
@@ -18,14 +16,14 @@ const AccommodationManagementPage = () => {
             tab: "max-w-fit px-0 h-12",
           }}
         >
-          <Tab title="Your accommodations">
-            <AccommodationHostSearch />
+          <Tab title="Upcoming bookings">
+            <UpcomingGuestReservations />
           </Tab>
-          <Tab  title="New accommodation">
-            <AccommodationRegistration />
+          <Tab  title="Pending accommodation reviews">
+            Pending accommodation review
           </Tab>
-          <Tab title="Upcoming reservations">
-            <UpcomingHostReservations />
+          <Tab  title="Pending host reviews">
+            Pending host review
           </Tab>
         </Tabs>
       </div>
@@ -33,4 +31,4 @@ const AccommodationManagementPage = () => {
   );
 };
 
-export default AccommodationManagementPage;
+export default MyBookingsPage;
