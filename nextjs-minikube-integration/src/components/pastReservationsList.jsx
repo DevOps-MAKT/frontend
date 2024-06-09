@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import PastReservationListItem from '@/components/pastReservationListItem';
+import PastReservationListItem from '@/components/listItems/pastReservationListItem';
 import { get } from '@/utils/httpRequests';
 
 const PastReservationsList = () => {

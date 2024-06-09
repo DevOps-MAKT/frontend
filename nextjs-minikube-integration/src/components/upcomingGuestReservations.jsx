@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import CancellableReservationListItem from '@/components/cancellableReservationListItem';
+import CancellableReservationListItem from '@/components/listItems/cancellableReservationListItem';
 import ConfirmationModal from '@/components/confirmationModal';
 import { useDisclosure } from '@nextui-org/react';
 import { get, patch } from '@/utils/httpRequests';

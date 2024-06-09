@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import AccommodationSearchItem from '@/components/accommodationSearchItem';
 import { get } from '@/utils/httpRequests';
 
-const AccommodationHostSearch = () => {
+const HostAccommodationsList = () => {
   const [accommodations, setAccommodations] = useState([]);
 
   useEffect(() => {
@@ -34,4 +34,4 @@ const AccommodationHostSearch = () => {
     </div>
   );
 };
-export default AccommodationHostSearch;
+export default HostAccommodationsList;

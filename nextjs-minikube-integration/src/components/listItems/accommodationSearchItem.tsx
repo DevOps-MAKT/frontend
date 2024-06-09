@@ -1,7 +1,7 @@
 import { Button, Chip } from '@nextui-org/react';
 import { useRouter } from "next/navigation";
 import Image from 'next/image';
-import Rating from './rating';
+import Rating from '@/components/rating';
 
 const AccommodationSearchItem = ({accommodation}: any) => {
   const router = useRouter();

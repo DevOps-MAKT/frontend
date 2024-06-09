@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken, clearToken } from './token';
+import { getToken, clearToken } from '@/utils/token';
 import { env } from 'next-runtime-env';
 
 const services = (service) => {

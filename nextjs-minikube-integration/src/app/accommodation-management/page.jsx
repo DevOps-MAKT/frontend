@@ -1,6 +1,6 @@
 'use client'
 import AccommodationRegistration from "@/components/accommodationRegistration";
-import AccommodationHostSearch from '@/components/accommodationHostSearch';
+import HostAccommodationsList from '@/components/hostAccommodationsList';
 import UpcomingHostReservations from '@/components/upcomingHostReservations';
 import { Tabs, Tab } from "@nextui-org/react";
 
@@ -19,7 +19,7 @@ const AccommodationManagementPage = () => {
           }}
         >
           <Tab title="Your accommodations">
-            <AccommodationHostSearch />
+            <HostAccommodationsList />
           </Tab>
           <Tab  title="New accommodation">
             <AccommodationRegistration />

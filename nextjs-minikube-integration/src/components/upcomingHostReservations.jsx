@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import ReservationListItem from '@/components/reservationListItem';
+import ReservationListItem from '@/components/listItems/reservationListItem';
 import ConfirmationModal from '@/components/confirmationModal';
 import { useDisclosure } from '@nextui-org/react';
 import { get, patch } from '@/utils/httpRequests';
