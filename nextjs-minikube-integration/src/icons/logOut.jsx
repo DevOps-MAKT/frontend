@@ -6,6 +6,7 @@ export const LogOutIcon = (props) => (
     strokeWidth={1.5}
     stroke="currentColor"
     className="size-6"
+    {...props}
   >
     <path
       strokeLinecap="round"

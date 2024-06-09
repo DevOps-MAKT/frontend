@@ -153,6 +153,7 @@ const MyNavbar = () => {
 
       <div className={role === 'guest' ? 'my-auto flex flex-row space-x-4' : 'hidden'}>
         <Link className="text-white" href="notifications"><BellIcon /></Link>
+        <Link className="text-white" href="my-bookings"><HouseIcon /></Link>
         <Link className="text-white" href="profile"><PersonIcon /></Link>
         <Link className="text-white" href="login" onClick={logOut}><LogOutIcon /></Link>
 
