@@ -45,7 +45,6 @@ const AccommodationPage = ({ params }) => {
       try {
         const response = await get('accommodation', `/accommodation/${id}`);
         setAccommodation(response.data);
-        console.log(response.data)
       } catch (error) {
         console.error('Failed to fetch accommodations:', error.message);
       }

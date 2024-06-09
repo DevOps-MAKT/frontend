@@ -147,7 +147,7 @@ const MyNavbar = () => {
       </form>
 
       <div className={role === "" ? 'my-auto flex flex-row space-x-4' : 'hidden'}>
-        <Link className="text-white" href="login"><LogInIcon /></Link>
+        <Link className="text-white" href="/login"><LogInIcon /></Link>
 
       </div>
 

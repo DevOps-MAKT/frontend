@@ -15,7 +15,6 @@ const UpcomingGuestReservations = () => {
       try {
         const response = await get('reservation', '/reservation/active-reservations');
         setReservations(response.data);
-        console.log(response.data)
       } catch (error) {
         console.error('Failed to fetch resercations:', error.message);
       }

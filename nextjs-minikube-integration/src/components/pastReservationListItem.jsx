@@ -1,7 +1,7 @@
-import { Button, Link } from '@nextui-org/react';
+import { Link } from '@nextui-org/react';
 import Image from 'next/image';
 
-const CancellableReservationListItem = ( {reservation, modal, setChosenReservation } ) => {
+const CancellableReservationListItem = ( {reservation } ) => {
 
   const timestampToDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp);
@@ -9,11 +9,6 @@ const CancellableReservationListItem = ( {reservation, modal, setChosenReservati
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
     return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  }
-
-  const cancelReservation = (id) => {
-    setChosenReservation(id);
-    modal.onOpen();
   }
 
   return (
@@ -34,9 +29,6 @@ const CancellableReservationListItem = ( {reservation, modal, setChosenReservati
           </p>
           
         </div>
-      </div>
-      <div className="h-64 flex flex-col justify-end items-end">
-          <Button color='danger' onPress={() => cancelReservation(reservation.id)} >Cancel</Button>
       </div>
     </div>
   );
