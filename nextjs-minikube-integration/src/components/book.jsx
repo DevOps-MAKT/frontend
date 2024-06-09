@@ -19,7 +19,7 @@ const Booking = ({ accommodation }) => {
 
   const dateToTimestamp = (calendarDate) => {
     const date = new Date(calendarDate.year, calendarDate.month - 1, calendarDate.day);
-    const timestamp = Math.floor(date.getTime() / 1000);
+    const timestamp = Math.floor(date.getTime());
     return timestamp;
   }
 
@@ -55,8 +55,6 @@ const Booking = ({ accommodation }) => {
       endDate: dateToTimestamp(range.end),
       noGuests: noGuests,
     };
-    console.log(data)
-    return;
     try {
       await post('reservation', `/reservation/create`, data);
     } catch (error) {

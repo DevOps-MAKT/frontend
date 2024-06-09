@@ -71,7 +71,7 @@ const MyNavbar = () => {
       throw new Error("Invalid date format");
     }
 
-    const unixTimestamp = Math.floor(date.getTime() / 1000);
+    const unixTimestamp = Math.floor(date.getTime());
 
     return unixTimestamp;
   }
