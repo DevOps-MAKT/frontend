@@ -8,17 +8,19 @@ import AvailabilityCreation from "@/components/availabilityCreation"
 import AvailabilityModification from "@/components/availabilityModification"
 import PriceModification from "@/components/priceModificaiton"
 import AccommodationReviews from "@/components/accommodationReviews"
+import HostReviews from "@/components/hostReviews"
 import Booking from "@/components/book"
 import { getEmail, getRole } from "@/utils/token";
 
 const AccommodationPage = ({ params }) => {
   const { id } = params;
   const [isOwner, setIsOwner] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
   const [canReviewAcc, setCanReviewAcc] = useState(false);
   const [canReviewHost, setCanReviewHost] = useState(false);
   const [accommodationReviews, setAccommodationReviews] = useState([]);
   const [hostReviews, setHostReviews] = useState([]);
-  const [selected, setSelected] = useState("create-availability");
+  const [selected, setSelected] = useState("accommodationReviews");
   const [accommodation, setAccommodation] = useState({
     id: 0,
     name: '',
@@ -31,6 +33,8 @@ const AccommodationPage = ({ params }) => {
   });
 
   useEffect(() => {
+
+    setIsGuest(getRole === "guest");
 
     const fetchMyAccommodations = async () => {
       try {
@@ -63,7 +67,7 @@ const AccommodationPage = ({ params }) => {
           setCanReviewAcc(true);
         }
       } catch (error) {
-        console.error('Failed to fetch accommodationReviews:', error.message);
+        console.error('Failed to fetch accommodation reviews:', error.message);
       }
     };
 
@@ -71,6 +75,27 @@ const AccommodationPage = ({ params }) => {
     fetchAccommodation();
     fetchAccommodationReviews();
   }, []);
+
+  useEffect(() => {
+    if (accommodation.imageUrl === '') return;
+    const fetchHostReviews = async () => {
+      try {
+        const response = await get('user', `/user/host-reviews-info/${accommodation.hostEmail}`);
+        setHostReviews(response.data.reviews);
+        console.log(response.data.reviews)
+        console.log(getEmail())
+        console.log(!response.data.reviews.some(review => review.guestEmail === getEmail()))
+        if (getRole() === 'guest' && !response.data.reviews.some(review => review.guestEmail === getEmail())) {
+          setCanReviewHost(true);
+          console.log("is true")
+        }
+      } catch (error) {
+        console.error('Failed to fetch accommodation reviews:', error.message);
+      }
+    };
+
+    fetchHostReviews();
+  }, [accommodation]);
 
   return (
     <div className="flex justify-center items-start min-h-[calc(100vh-56px)] py-12">
@@ -117,8 +142,11 @@ const AccommodationPage = ({ params }) => {
                 tab: "max-w-fit px-0 h-12",
               }}
             >
-              <Tab key="reviews" title="Reviews" >
-                Reviews
+              <Tab key="accommodationReviews" title="Accommodation Reviews" >
+                <AccommodationReviews accommodationId={id} hostEmail={accommodation.hostEmail} canReview={canReviewAcc} reviews={accommodationReviews} />
+              </Tab>
+              <Tab key="hostReviews" title="Host Reviews" >
+                <HostReviews hostEmail={accommodation.hostEmail} canReview={canReviewHost} reviews={hostReviews} />
               </Tab>
               <Tab key="price" title="Modify Price" >
                 <PriceModification accommodation={accommodation} ></PriceModification>
@@ -131,24 +159,50 @@ const AccommodationPage = ({ params }) => {
               </Tab>
             </Tabs>
           ) : (
-            <Tabs
-              aria-label="Options"
-              variant="underlined"
-              selectedKey={selected}
-              onSelectionChange={setSelected}
-              classNames={{
-                tabList: "gap-6 w-full relative rounded-none p-0 border-b border-divider",
-                cursor: "w-full bg-primary",
-                tab: "max-w-fit px-0 h-12",
-              }}
-            >
-              <Tab key="reviews" title="Reviews" >
-                <AccommodationReviews accommodationId={id} hostEmail={accommodation.hostEmail} canReviewAccommodation={canReviewAcc} reviews={accommodationReviews} />
-              </Tab>
-              <Tab key="book" title="Book" >
-                <Booking accommodation={accommodation} />
-              </Tab>
-            </Tabs>
+            <>
+            { isGuest ? (
+              <Tabs
+                aria-label="Options"
+                variant="underlined"
+                selectedKey={selected}
+                onSelectionChange={setSelected}
+                classNames={{
+                  tabList: "gap-6 w-full relative rounded-none p-0 border-b border-divider",
+                  cursor: "w-full bg-primary",
+                  tab: "max-w-fit px-0 h-12",
+                }}
+              >
+                <Tab key="accommodationReviews" title="Accommodation Reviews" >
+                  <AccommodationReviews accommodationId={id} hostEmail={accommodation.hostEmail} canReview={canReviewAcc} reviews={accommodationReviews} />
+                </Tab>
+                <Tab key="hostReviews" title="Host Reviews" >
+                  <HostReviews hostEmail={accommodation.hostEmail} canReview={canReviewHost} reviews={hostReviews} />
+                </Tab>
+                <Tab key="book" title="Book" >
+                  <Booking accommodation={accommodation} />
+                </Tab>
+              </Tabs>
+            ) : (
+              <Tabs
+                aria-label="Options"
+                variant="underlined"
+                selectedKey={selected}
+                onSelectionChange={setSelected}
+                classNames={{
+                  tabList: "gap-6 w-full relative rounded-none p-0 border-b border-divider",
+                  cursor: "w-full bg-primary",
+                  tab: "max-w-fit px-0 h-12",
+                }}
+              >
+                <Tab key="accommodationReviews" title="Accommodation Reviews" >
+                  <AccommodationReviews accommodationId={id} hostEmail={accommodation.hostEmail} canReview={canReviewAcc} reviews={accommodationReviews} />
+                </Tab>
+                <Tab key="hostReviews" title="Host Reviews" >
+                  <HostReviews hostEmail={accommodation.hostEmail} canReview={canReviewHost} reviews={hostReviews} />
+                </Tab>
+              </Tabs>
+            )}
+            </>
           )}
         </div>
       </div>

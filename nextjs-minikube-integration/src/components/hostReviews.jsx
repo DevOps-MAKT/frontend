@@ -5,22 +5,21 @@ import ReviewListItem from "@/components/listItems/reviewListItem";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { put } from "@/utils/httpRequests";
 
-const AccommodationReviews = ({ accommodationId, hostEmail, canReview, reviews }) => {
+const HostReviews = ({ hostEmail, canReview, reviews }) => {
 
   const modal = useDisclosure();
 
   const addReview = async (rating) => {
     try {
       const data = {
-        accommodationId: accommodationId,
         hostEmail: hostEmail,
         rating: rating
       }
-      await put('user', '/user/add-accommodation-review', data);
+      await put('user', '/user/add-host-review', data);
       modal.onClose();
       window.location.reload();
     } catch (error) {
-      console.error('Failed to add review for accommodation:', error.message);
+      console.error('Failed to add review for host:', error.message);
     }
   }
 
@@ -32,7 +31,7 @@ const AccommodationReviews = ({ accommodationId, hostEmail, canReview, reviews }
         </div>
 
         {reviews.length === 0 ? (
-          <div className="text-gray-300 mt-4 w-full flex justify-center">This accommodation doesn&apos;t have any reviews.</div>
+          <div className="text-gray-300 mt-4 w-full flex justify-center">This host doesn&apos;t have any reviews.</div>
         ) : (
           <div className="grid grid-cols-2 mt-4 gap-4">
           {reviews.map((review, index) => (
@@ -46,4 +45,4 @@ const AccommodationReviews = ({ accommodationId, hostEmail, canReview, reviews }
     </>
   );
 };
-export default AccommodationReviews;
+export default HostReviews;
