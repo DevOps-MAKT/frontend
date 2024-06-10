@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { patch } from '@/utils/httpRequests';
 import { parseDate } from "@internationalized/date";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, RangeCalendar } from '@nextui-org/react';
-import { TrashIcon } from "@/icons/trash";
 import { PlusIcon } from "@/icons/plus";
 import { today, getLocalTimeZone } from "@internationalized/date";
 

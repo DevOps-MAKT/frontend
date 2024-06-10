@@ -1,6 +1,6 @@
 export const PlusIcon = (props) => (
   <svg
-    class="w-7 h-7 text-white"
+    className="w-7 h-7 text-white"
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -11,16 +11,16 @@ export const PlusIcon = (props) => (
   >
     <path
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
       d="M10 2V18"
     />
     <path
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
       d="M2 10H18"
     />
   </svg>

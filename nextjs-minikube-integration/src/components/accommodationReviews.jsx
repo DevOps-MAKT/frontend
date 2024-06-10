@@ -42,7 +42,7 @@ const AccommodationReviews = ({ accommodationId, hostEmail, canReview, reviews }
         )}
       </div>
 
-      <ReviewModal modalObject={modal} addReviewCallback={addReview} />
+      <ReviewModal modalObject={modal} addReviewCallback={addReview} ratingPlaceholder={0} />
     </>
   );
 };
