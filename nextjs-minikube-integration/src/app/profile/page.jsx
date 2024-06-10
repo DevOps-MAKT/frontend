@@ -5,12 +5,13 @@ import InfoModal from "@/components/infoModal"
 import ConfirmationModal from "@/components/confirmationModal"
 import { get, patch, put } from "@/utils/httpRequests";
 import { clearToken, getRole } from "@/utils/token";
-import { Button, Input, Select, SelectItem, Divider } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem, Divider, Switch } from "@nextui-org/react";
 import { useDisclosure } from '@nextui-org/react';
 
 const ProfilePage = () => {
 
   const router = useRouter();
+  const [role, setRole] = useState();
   const [cities, setCities] = useState([]);
   const [errors, setErrors] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState(true);
@@ -18,12 +19,21 @@ const ProfilePage = () => {
   const okModal = useDisclosure();
   const errorModal = useDisclosure();
 
+  const [automaticReservationAcceptance, setAutomaticReservationAcceptance] = useState(false);
+
   const [formData, setFormData] = useState({
     username: '',
     firstName: '',
     lastName: '',
     location: '',
   });
+
+  const [reservationRequestedNotificationsActive, setReservationRequestedNotificationsActive] = useState(false);
+  const [reservationCancelledNotificationsActive, setReservationCancelledNotificationsActive] = useState(false);
+  const [hostRatedNotificationsActive, setHostRatedNotificationsActive] = useState(false);
+  const [accommodationRatedNotificationsActive, setAccommodationRatedNotificationsActive] = useState(false);
+  const [reservationRequestAnsweredActive, setReservationRequestAnsweredActive] = useState(false);
+
 
   const [passwordFormData, setPasswordFormData] = useState({
     password: '',
@@ -95,6 +105,15 @@ const ProfilePage = () => {
           lastName: response.data.lastName,
           location: response.data.city + ", " + response.data.country,
         });
+        setReservationRequestedNotificationsActive(response.data.reservationRequestedNotificationsActive);
+        setReservationCancelledNotificationsActive(response.data.reservationCancelledNotificationsActive);
+        setHostRatedNotificationsActive(response.data.hostRatedNotificationsActive);
+        setAccommodationRatedNotificationsActive(response.data.accommodationRatedNotificationsActive);
+        setReservationRequestAnsweredActive(response.data.reservationRequestAnsweredActive);
+
+        setAutomaticReservationAcceptance(response.data.automaticReservationAcceptance);
+
+        setRole(getRole());
       } catch (error) {
         console.error('Failed to fetch cities:', error.message);
       }
@@ -119,6 +138,25 @@ const ProfilePage = () => {
       setPasswordFormData({ password: '', confirmationPassword: '' });
     } catch (error) {
       console.error('User data update failed:', error.message);
+    }
+  };
+
+  const handleSwitchSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = {
+        reservationRequestedNotificationsActive: reservationRequestedNotificationsActive,
+        reservationCancelledNotificationsActive: reservationCancelledNotificationsActive,
+        hostRatedNotificationsActive: hostRatedNotificationsActive,
+        accommodationRatedNotificationsActive: accommodationRatedNotificationsActive,
+        reservationRequestAnsweredActive: reservationRequestAnsweredActive
+      };
+      console.log(data)
+      await patch('user', '/user/active-notification-statuses', JSON.stringify(data));
+      setMessage("You have successfully updated your notification settings.");
+      okModal.onOpen();
+    } catch (error) {
+      console.error('Notification update failed:', error.message);
     }
   };
 
@@ -152,8 +190,8 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-[calc(100vh-56px)]">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl">
+    <div className="flex justify-center items-center">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl my-20">
         <h2 className="text-2xl font-bold mb-8">Account management</h2>
         <div className="text-lg text-gray-500 mb-4">Change your information</div>
         <form onSubmit={handleSubmit} noValidate={true} >
@@ -224,6 +262,41 @@ const ProfilePage = () => {
               Change password
             </Button>
           </div>
+        </form>
+
+        <form onSubmit={handleSwitchSubmit} className={role === 'guest' ? 'flex flex-col space-y-4 mt-8' : 'hidden'} >
+          <Divider orientation="horizontal" className="mb-4" />
+          <div className="text-lg text-gray-500 mb-4">Notification settings</div>
+            <Switch onValueChange={setReservationRequestAnsweredActive} isSelected={reservationRequestAnsweredActive} >
+              Recieve notification when host responds to reservation
+            </Switch>
+            <div className="flex flex-row-reverse">
+              <Button type="submit" color="primary" >
+                Update
+              </Button>
+            </div>
+        </form>
+
+        <form onSubmit={handleSwitchSubmit} className={role === 'host' ? 'flex flex-col space-y-4 mt-8' : 'hidden'} >
+          <Divider orientation="horizontal" className="mb-4" />
+          <div className="text-lg text-gray-500 mb-4">Notification settings</div>
+            <Switch onValueChange={setReservationRequestedNotificationsActive} isSelected={reservationRequestedNotificationsActive} >
+              Recieve notifications when someone books your accommodation
+            </Switch>
+            <Switch onValueChange={setReservationCancelledNotificationsActive} isSelected={reservationCancelledNotificationsActive} >
+              Recieve notifications when someone cancels booking of your accommodation
+            </Switch>
+            <Switch onValueChange={setHostRatedNotificationsActive} isSelected={hostRatedNotificationsActive} >
+              Recieve notification when someone rates you
+            </Switch>
+            <Switch onValueChange={setAccommodationRatedNotificationsActive} isSelected={accommodationRatedNotificationsActive} >
+              Recieve notification when someone rates your accommodation
+            </Switch>
+            <div className="flex flex-row-reverse">
+              <Button type="submit" color="primary" >
+                Update
+              </Button>
+            </div>
         </form>
 
         <Divider orientation="horizontal" className="my-8" />
