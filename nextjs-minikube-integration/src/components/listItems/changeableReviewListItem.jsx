@@ -1,7 +1,7 @@
 import Rating from '@/components/rating';
 import { Button } from '@nextui-org/react';
 
-const ChangeableReservationListItem = ({ review, forWho, setReview, modal }) => {
+const ChangeableReservationListItem = ({ review, forWho, setReview, changeModal, deleteModal }) => {
 
   const timestampToDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp);
@@ -11,9 +11,14 @@ const ChangeableReservationListItem = ({ review, forWho, setReview, modal }) => 
     return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   }
 
-  const handleButtonClick = () => {
+  const handleChange = () => {
     setReview(review);
-    modal.onOpen();
+    changeModal.onOpen();
+  }
+
+  const handleDelete = () => {
+    setReview(review);
+    deleteModal.onOpen();
   }
 
   return (
@@ -25,8 +30,9 @@ const ChangeableReservationListItem = ({ review, forWho, setReview, modal }) => 
       <div>
         For: <span className='text-black'>{forWho}</span>
       </div>
-      <div className='flex flex-row justify-end'>
-        <Button color='primary' onPress={handleButtonClick} >Change</Button>
+      <div className='flex flex-row justify-end space-x-2'>
+          <Button color='danger' onPress={handleDelete} >Delete</Button>
+        <Button color='primary' onPress={handleChange} >Change</Button>
       </div>
     </div>
   );

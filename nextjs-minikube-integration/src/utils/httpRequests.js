@@ -83,6 +83,18 @@ export const get = async (service, route) => {
   }
 };
 
+export const deleteHttp = async (service, route) => {
+  try {
+    const response = await httpService.delete(`${services(service)}${route}`, headers);
+    if (response.status !== 200) {
+      throw new Error(`Status ${response.status}: ${response.statusText}`)
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const patch = async (service, route, body) => {
   try {
     const response = await httpService.patch(`${services(service)}${route}`, body, headers);

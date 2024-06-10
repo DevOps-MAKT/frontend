@@ -1,7 +1,8 @@
 'use client'
+import ConfirmationModal from "@/components/confirmationModal";
 import ChangeableReviewListItem from "@/components/listItems/changeableReviewListItem";
 import ReviewModal from "@/components/reviewModal";
-import { get, put } from "@/utils/httpRequests";
+import { get, put, deleteHttp } from "@/utils/httpRequests";
 import { getEmail } from "@/utils/token";
 import { Tabs, Tab, useDisclosure } from "@nextui-org/react";
 import { useState, useEffect } from "react";
@@ -11,7 +12,8 @@ const MyBookingsPage = () => {
   const [accommodationReviews, setAccommodationReviews] = useState([]);
   const [hostReviews, setHostReviews] = useState([]);
   const [selectedReview, setSelectedReview] = useState([]);
-  const modal = useDisclosure();
+  const changeModal = useDisclosure();
+  const deleteModal = useDisclosure();
 
   useEffect(() => {
 
@@ -47,7 +49,7 @@ const MyBookingsPage = () => {
         rating: newRating
       }
       await put('user', '/user/add-accommodation-review', data);
-      modal.onClose();
+      changeModal.onClose();
       window.location.reload();
     } catch (error) {
       console.error('Failed to change review for accommodation:', error.message);
@@ -63,7 +65,36 @@ const MyBookingsPage = () => {
         rating: newRating
       }
       await put('user', '/user/add-host-review', data);
-      modal.onClose();
+      changeModal.onClose();
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to add review for host:', error.message);
+    }
+  }
+
+  const deleteReview = async () => {
+    if (Object.hasOwn(selectedReview, 'accommodationId')) {
+      deleteAccommodationReview(selectedReview);
+    }
+    else {
+      deleteHostReview(selectedReview);
+    }
+  }
+
+  const deleteAccommodationReview = async (review) => {
+    try {
+      await deleteHttp('user', `/user/delete-accommodation-review/${review.accommodationId}`);
+      deleteModal.onClose();
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to change review for accommodation:', error.message);
+    }
+  }
+
+  const deleteHostReview = async (review) => {
+    try {
+      await deleteHttp('user', `/user/delete-host-review/${review.hostEmail}`);
+      deleteModal.onClose();
       window.location.reload();
     } catch (error) {
       console.error('Failed to add review for host:', error.message);
@@ -89,18 +120,18 @@ const MyBookingsPage = () => {
             ) : (
               <div className="grid grid-cols-2 mt-4 gap-4">
                 {accommodationReviews.map((accommodationReview, index) => (
-                  <ChangeableReviewListItem key={index} review={accommodationReview} setReview={setSelectedReview} modal={modal} />
+                  <ChangeableReviewListItem key={index} review={accommodationReview} forWho={accommodationReview.accommodationId} setReview={setSelectedReview} changeModal={changeModal} deleteModal={deleteModal} />
                 ))}
               </div>
             )}
           </Tab>
           <Tab title="Host reviews">
-            {accommodationReviews.length === 0 ? (
+            {hostReviews.length === 0 ? (
               <div className="text-gray-300 mt-4 w-full flex justify-center">You don&apos;t have reviews for any hosts.</div>
             ) : (
               <div className="grid grid-cols-2 mt-4 gap-4">
                 {hostReviews.map((hostReview, index) => (
-                  <ChangeableReviewListItem key={index} review={hostReview} setReview={setSelectedReview} modal={modal} />
+                  <ChangeableReviewListItem key={index} review={hostReview} forWho={hostReview.hostEmail} setReview={setSelectedReview} changeModal={changeModal} deleteModal={deleteModal} />
                 ))}
               </div>
             )}
@@ -108,7 +139,8 @@ const MyBookingsPage = () => {
         </Tabs>
       </div>
 
-      <ReviewModal modalObject={modal} addReviewCallback={updateReview} />
+      <ReviewModal modalObject={changeModal} addReviewCallback={updateReview} />
+      <ConfirmationModal modalObject={deleteModal} title={"Deleting a review"} message={"Are you sure you want to delete the review?"} callback={deleteReview} callbackStyle={"danger"} buttonContent={"Delete"} />
     </div>
   );
 };
