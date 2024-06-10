@@ -1,5 +1,6 @@
 'use client'
 import UpcomingGuestReservations from '@/components/upcomingGuestReservations';
+import PastReservationsList from '@/components/pastReservationsList';
 import { Tabs, Tab } from "@nextui-org/react";
 
 const MyBookingsPage = () => {
@@ -19,11 +20,8 @@ const MyBookingsPage = () => {
           <Tab title="Upcoming bookings">
             <UpcomingGuestReservations />
           </Tab>
-          <Tab  title="Pending accommodation reviews">
-            Pending accommodation review
-          </Tab>
-          <Tab  title="Pending host reviews">
-            Pending host review
+          <Tab  title="Past bookings">
+            <PastReservationsList />
           </Tab>
         </Tabs>
       </div>

@@ -10,7 +10,7 @@ const Booking = ({ accommodation }) => {
   const [noGuests, setNoGuests] = useState();
 
   const timestampToDate = (unixTimestamp) => {
-    const date = new Date(unixTimestamp * 1000);
+    const date = new Date(unixTimestamp);
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
@@ -19,7 +19,7 @@ const Booking = ({ accommodation }) => {
 
   const dateToTimestamp = (calendarDate) => {
     const date = new Date(calendarDate.year, calendarDate.month - 1, calendarDate.day);
-    const timestamp = Math.floor(date.getTime() / 1000);
+    const timestamp = Math.floor(date.getTime());
     return timestamp;
   }
 

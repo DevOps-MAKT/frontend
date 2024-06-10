@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import CancellableReservationListItem from '@/components/cancellableReservationListItem';
+import CancellableReservationListItem from '@/components/listItems/cancellableReservationListItem';
 import ConfirmationModal from '@/components/confirmationModal';
 import { useDisclosure } from '@nextui-org/react';
 import { get, patch } from '@/utils/httpRequests';
@@ -15,7 +15,6 @@ const UpcomingGuestReservations = () => {
       try {
         const response = await get('reservation', '/reservation/active-reservations');
         setReservations(response.data);
-        console.log(response.data)
       } catch (error) {
         console.error('Failed to fetch resercations:', error.message);
       }
