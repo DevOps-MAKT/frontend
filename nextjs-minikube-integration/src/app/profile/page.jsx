@@ -160,6 +160,17 @@ const ProfilePage = () => {
     }
   };
 
+  const handleAutomaticAcceptanceSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await patch('user', `/user/change-automatic-reservation-acceptance-status/${automaticReservationAcceptance}`, {});
+      setMessage("You have successfully updated whether your reservations are approved successfully.");
+      okModal.onOpen();
+    } catch (error) {
+      console.error('Notification update failed:', error.message);
+    }
+  };
+
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -264,39 +275,52 @@ const ProfilePage = () => {
           </div>
         </form>
 
+        <form onSubmit={handleAutomaticAcceptanceSubmit} className={role === 'host' ? 'flex flex-col space-y-4 mt-8' : 'hidden'} >
+          <Divider orientation="horizontal" className="mb-4" />
+          <div className="text-lg text-gray-500 mb-4">Automatic booking approval</div>
+          <Switch onValueChange={setAutomaticReservationAcceptance} isSelected={automaticReservationAcceptance} >
+            Automatically approve all requested bookings
+          </Switch>
+          <div className="flex flex-row-reverse">
+            <Button type="submit" color="primary" >
+              Update
+            </Button>
+          </div>
+        </form>
+
         <form onSubmit={handleSwitchSubmit} className={role === 'guest' ? 'flex flex-col space-y-4 mt-8' : 'hidden'} >
           <Divider orientation="horizontal" className="mb-4" />
           <div className="text-lg text-gray-500 mb-4">Notification settings</div>
-            <Switch onValueChange={setReservationRequestAnsweredActive} isSelected={reservationRequestAnsweredActive} >
-              Recieve notification when host responds to reservation
-            </Switch>
-            <div className="flex flex-row-reverse">
-              <Button type="submit" color="primary" >
-                Update
-              </Button>
-            </div>
+          <Switch onValueChange={setReservationRequestAnsweredActive} isSelected={reservationRequestAnsweredActive} >
+            Recieve notification when host responds to reservation
+          </Switch>
+          <div className="flex flex-row-reverse">
+            <Button type="submit" color="primary" >
+              Update
+            </Button>
+          </div>
         </form>
 
         <form onSubmit={handleSwitchSubmit} className={role === 'host' ? 'flex flex-col space-y-4 mt-8' : 'hidden'} >
           <Divider orientation="horizontal" className="mb-4" />
           <div className="text-lg text-gray-500 mb-4">Notification settings</div>
-            <Switch onValueChange={setReservationRequestedNotificationsActive} isSelected={reservationRequestedNotificationsActive} >
-              Recieve notifications when someone books your accommodation
-            </Switch>
-            <Switch onValueChange={setReservationCancelledNotificationsActive} isSelected={reservationCancelledNotificationsActive} >
-              Recieve notifications when someone cancels booking of your accommodation
-            </Switch>
-            <Switch onValueChange={setHostRatedNotificationsActive} isSelected={hostRatedNotificationsActive} >
-              Recieve notification when someone rates you
-            </Switch>
-            <Switch onValueChange={setAccommodationRatedNotificationsActive} isSelected={accommodationRatedNotificationsActive} >
-              Recieve notification when someone rates your accommodation
-            </Switch>
-            <div className="flex flex-row-reverse">
-              <Button type="submit" color="primary" >
-                Update
-              </Button>
-            </div>
+          <Switch onValueChange={setReservationRequestedNotificationsActive} isSelected={reservationRequestedNotificationsActive} >
+            Recieve notifications when someone books your accommodation
+          </Switch>
+          <Switch onValueChange={setReservationCancelledNotificationsActive} isSelected={reservationCancelledNotificationsActive} >
+            Recieve notifications when someone cancels booking of your accommodation
+          </Switch>
+          <Switch onValueChange={setHostRatedNotificationsActive} isSelected={hostRatedNotificationsActive} >
+            Recieve notification when someone rates you
+          </Switch>
+          <Switch onValueChange={setAccommodationRatedNotificationsActive} isSelected={accommodationRatedNotificationsActive} >
+            Recieve notification when someone rates your accommodation
+          </Switch>
+          <div className="flex flex-row-reverse">
+            <Button type="submit" color="primary" >
+              Update
+            </Button>
+          </div>
         </form>
 
         <Divider orientation="horizontal" className="my-8" />
