@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import { get } from "@/utils/httpRequests"
-import AccommodationSearchItem from "@/components/accommodationSearchItem";
+import AccommodationSearchItem from "@/components/listItems/accommodationSearchItem";
 
 const SearchPage = () => {
 
