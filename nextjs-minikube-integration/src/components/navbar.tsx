@@ -1,5 +1,5 @@
 'use client'
-import { Button, DateValue, Input, RangeValue, Select, SelectItem, Link } from "@nextui-org/react";
+import { Button, DateValue, Input, RangeValue, Select, SelectItem, Link, Badge } from "@nextui-org/react";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { useEffect, useState } from "react";
 import { Location } from "@/model/Location";
@@ -18,6 +18,7 @@ const MyNavbar = () => {
   const router = useRouter();
   const [cities, setCities] = useState<string[]>([]);
   const [role, setRole] = useState<string>("");
+  const [notifications, setNotifications] = useState<number>(0);
 
   const [formData, setFormData] = useState({
     noGuests: '',
@@ -37,10 +38,23 @@ const MyNavbar = () => {
       }
     };
 
+    const fetchNotifications = async () => {
+      try {
+        const response = await get('notification', '/notification/users-notifications');
+        setNotifications(response.data.filter((item: any) => !item.read).length);
+      } catch (error: any) {
+        console.error('Failed to fetch cities:', error.message);
+      }
+    };
+
     var role = getRole()
     if (role === null) {
       role = "";
     }
+    else {
+      fetchNotifications();
+    }
+
     setRole(role);
     fetchCities();
   }, []);
@@ -153,7 +167,9 @@ const MyNavbar = () => {
       </div>
 
       <div className={role === 'guest' ? 'my-auto flex flex-row justify-end space-x-4 w-52' : 'hidden'}>
-        <Link className="text-white" href="/notifications"><BellIcon /></Link>
+        <Badge color="danger" content={notifications} isInvisible={notifications === 0} shape="circle">
+          <Link className="text-white" href="/notifications"><BellIcon /></Link>
+        </Badge>
         <Link className="text-white" href="/my-reviews"><MessageIcon /></Link>
         <Link className="text-white" href="/my-bookings"><HouseIcon /></Link>
         <Link className="text-white" href="/profile"><PersonIcon /></Link>
@@ -162,7 +178,9 @@ const MyNavbar = () => {
       </div>
 
       <div className={role === "host" ? 'my-auto flex flex-row justify-end space-x-4 w-52' : 'hidden'}>
-        <Link className="text-white" href="/notifications"><BellIcon /></Link>
+        <Badge color="danger" content={notifications} isInvisible={notifications === 0} shape="circle">
+          <Link className="text-white" href="/notifications"><BellIcon /></Link>
+        </Badge>
         <Link className="text-white" href="/accommodation-management"><HouseIcon /></Link>
         <Link className="text-white" href="/profile"><PersonIcon /></Link>
         <Link className="text-white" href="/login" onClick={logOut}><LogOutIcon /></Link>
