@@ -90,21 +90,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
       - name: Insert ENV
         working-directory: nextjs-minikube-integration
         run: |
           echo "${{ secrets.FRONTEND_ENV }}" > .env
 
-      - name: Build and push
-        uses: docker/build-push-action@v5
+      - name: Kaniko Docker Image Build
+        uses: aevea/action-kaniko@master
         with:
-          context: .
-          file: ./nextjs-minikube-integration/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}:${{ needs.versioning.outputs.new_version }}
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_NAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          cache: true
+          tag: ${{ needs.versioning.outputs.new_version }}
+          build_file: ./nextjs-minikube-integration/Dockerfile
