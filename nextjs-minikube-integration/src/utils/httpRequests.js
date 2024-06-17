@@ -6,7 +6,8 @@ const services = (service) => {
   return {
     'user': env('NEXT_PUBLIC_USER_SERVICE_API'),
     'accommodation': env('NEXT_PUBLIC_ACCOMMODATION_SERVICE_API'),
-    'reservation': env('NEXT_PUBLIC_RESERVATION_SERVICE_API')
+    'reservation': env('NEXT_PUBLIC_RESERVATION_SERVICE_API'),
+    'notification': env('NEXT_PUBLIC_NOTIFICATION_SERVICE_API')
   }[service]
 }
 
