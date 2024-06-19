@@ -1,26 +1,19 @@
 
-import React, { useState } from 'react';
-import { patch } from '@/utils/httpRequests';
+import { useState, useMemo, useEffect } from 'react';
+import { post } from '@/utils/httpRequests';
 import { parseDate } from "@internationalized/date";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, RangeCalendar } from '@nextui-org/react';
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, RangeCalendar, Input } from '@nextui-org/react';
 import { PlusIcon } from "@/icons/plus";
-import { today, getLocalTimeZone } from "@internationalized/date";
+import { TrashIcon } from "@/icons/trash";
 
 const AvailabilityModification = ({ accommodation }) => {
 
-  let [newAvailability, setNewAvailability] = useState({
-    start: today(getLocalTimeZone()),
-    end: today(getLocalTimeZone()),
-  });
-  const [availableRanges, setAvailableRanges] = useState(accommodation.availabilityPeriods);
-
-
   const formatDate = (date) => {
-    return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`
+    return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
   }
 
   const timestampToDate = (unixTimestamp) => {
-    const date = new Date(unixTimestamp * 1000);
+    const date = new Date(unixTimestamp);
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
@@ -33,54 +26,146 @@ const AvailabilityModification = ({ accommodation }) => {
     return timestamp;
   }
 
-  let isDateUnavailable = (date) =>
-    availableRanges.some(
-      (interval) => date.compare(interval.start) >= 0 && date.compare(interval.end) <= 0,
+  const [availabilities, setAvailabilities] = useState(
+    accommodation.availabilityPeriods.map(date => ({
+      id: date.id,
+      startDate: timestampToDate(date.startDate),
+      endDate: timestampToDate(date.endDate),
+      specialAccommodationPricePeriods: date.specialAccommodationPricePeriods,
+    }))
+  );
+
+  const [newRange, setNewRange] = useState();
+  const [newPrice, setNewPrice] = useState();
+  const [specialPrices, setSpecialPrices] = useState([]);
+  const [selectedAvailability, setSelectedAvailability] = useState(null);
+  const [selectedAvailabilityId, setSelectedAvailabilityId] = useState(null);
+
+  const isBetween = (date, start, end) => {
+    return date.compare(start) >= 0 && date.compare(end) <= 0;
+  }
+
+  let isDateUnavailable = (date) => {
+    if (selectedAvailability === null) return true;
+  
+    const isWithinSelectedAvailability = isBetween(date, selectedAvailability.startDate, selectedAvailability.endDate);
+    if (!isWithinSelectedAvailability) return true;
+  
+    const isWithinSpecialPrices = specialPrices.some(
+      (interval) => isBetween(date, timestampToDate(interval.startDate), timestampToDate(interval.endDate))
     );
+    return isWithinSpecialPrices;
+  };
 
-  const handleAddRange = async () => {
-    const newRange = { start: newAvailability.start, end: newAvailability.end };
-    setAvailableRanges(prevRanges => [...prevRanges, newRange]);
+  useEffect(() => {
+    if (selectedAvailabilityId !== null) {
+      const availability = availabilities.find(a => a.id === selectedAvailabilityId);
+      setSelectedAvailability(availability);
+      if (availability) {
+        setSpecialPrices(availability.specialAccommodationPricePeriods);
+      }
+    }
+  }, [selectedAvailabilityId]);
+
+  const handleRowClick = (id) => {
+    setSelectedAvailabilityId(id);
+  };
+
+  const handleAddRange = async (e) => {
+    e.preventDefault();
+    const newSpecialPrice = {
+      startDate: dateToTimestamp(newRange.start),
+      endDate: dateToTimestamp(newRange.end),
+      price: newPrice,
+    }
     const data = {
-
+      isAvailabilityPeriodBeingUpdated: true,
+      availabilityPeriod: {
+        id: selectedAvailability.id,
+        startDate: dateToTimestamp(selectedAvailability.startDate),
+        endDate: dateToTimestamp(selectedAvailability.endDate),
+        accommodationId: accommodation.id,
+        specialAccommodationPricePeriods: [...specialPrices, {
+          startDate: dateToTimestamp(newRange.start),
+          endDate: dateToTimestamp(newRange.end),
+          price: newPrice,
+        }],
+      }
     }
     try {
-      const response = await patch('accommodation', `/accommodation/add-availability`, data);
-      window.location.reload();
+      setSpecialPrices(prevRanges => [...prevRanges, newSpecialPrice]);
+      console.log(data)
+      await post('accommodation', `/accommodation/change-availability-info`, data);
     } catch (error) {
       console.error('Failed to add availability period:', error.message);
     }
   };
 
-  const bottomContent = React.useMemo(() => {
+  const priceContent = useMemo(() => {
     return (
-      <Button color="primary" onPress={handleAddRange} >
-        <PlusIcon /> Add availability period
-      </Button>
+      <form className="flex" onSubmit={handleAddRange}>
+        <Input
+          aria-label="Price"
+          type="number"
+          min={0}
+          name="price"
+          placeholder="Price"
+          value={newPrice}
+          onValueChange={setNewPrice}
+          className="w-36 mr-4"
+          required
+        />
+        <Button color="primary" type="submit" className='min-h-10' >
+          <PlusIcon /> Add special price
+        </Button>
+      </form>
     );
-  }, []);
+  }, [newRange, setNewRange, newPrice, setNewPrice]);
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-6 gap-4">
-
-        <RangeCalendar
-          className="col-span-3"
-          aria-label="Date "
-          onChange={setNewAvailability}
-          value={newAvailability}
-          isDateUnavailable={isDateUnavailable}
-        />
+      <div className="grid grid-cols-2 gap-4">
 
         <Table
-          className="col-span-3"
           isHeaderSticky
           color="primary"
           selectionMode="single"
           defaultSelectedKeys={[]}
           aria-label="Availability periods"
-          topContent={bottomContent}
+          classNames={{
+            base: "max-h-[325px] col-span-2",
+          }}
+        >
+          <TableHeader>
+            <TableColumn>Start date</TableColumn>
+            <TableColumn>End date</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent={"No availability periods to display."} items={availabilities}>
+            {(item) => (
+              <TableRow key={item.id}
+              selected={selectedAvailability && selectedAvailability.id === item.id}
+              onClick={() => handleRowClick(item.id)}
+              >
+                <TableCell>{formatDate(item.startDate)}</TableCell>
+                <TableCell>{formatDate(item.endDate)}</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        <RangeCalendar
+          aria-label="Date"
+          value={newRange}
+          onChange={setNewRange}
+          isDateUnavailable={isDateUnavailable}
+        />
+
+        <Table
+          isHeaderSticky
+          color="primary"
+          aria-label="Special prices"
           topContentPlacement="outside"
+          topContent={priceContent}
           classNames={{
             base: "max-h-[325px]",
           }}
@@ -88,16 +173,19 @@ const AvailabilityModification = ({ accommodation }) => {
           <TableHeader>
             <TableColumn>Start date</TableColumn>
             <TableColumn>End date</TableColumn>
+            <TableColumn>Price</TableColumn>
           </TableHeader>
-          <TableBody emptyContent={"No availability periods to display."} items={availableRanges}>
+          <TableBody emptyContent={"No special prices to display."} items={specialPrices}>
             {(item) => (
-              <TableRow key={`${formatDate(item.start)}-${formatDate(item.end)}`}>
-                <TableCell>{formatDate(item.start)}</TableCell>
-                <TableCell>{formatDate(item.end)}</TableCell>
+              <TableRow key={`${formatDate(timestampToDate(item.startDate))}-${formatDate(timestampToDate(item.endDate))}`}>
+                <TableCell>{formatDate(timestampToDate(item.startDate))}</TableCell>
+                <TableCell>{formatDate(timestampToDate(item.endDate))}</TableCell>
+                <TableCell>{item.price}</TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
+
 
       </div>
     </div>

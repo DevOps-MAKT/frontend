@@ -45,6 +45,7 @@ const AccommodationPage = ({ params }) => {
             setIsOwner(true);
           }
         });
+        console.log(response.data)
       } catch (error) {
         console.error('Failed to fetch accommodations:', error.message);
       }
@@ -146,10 +147,10 @@ const AccommodationPage = ({ params }) => {
               <Tab key="price" title="Modify Price" >
                 <PriceModification accommodation={accommodation} ></PriceModification>
               </Tab>
-              <Tab key="create-availability" title="Create New Availability" >
+              <Tab key="create-availability" title="New Availability" >
                 <AvailabilityCreation accommodation={accommodation} ></AvailabilityCreation>
               </Tab>
-              <Tab key="modify-availability" title="Modify Availability" >
+              <Tab key="modify-availability" title="New Special Price" >
                 <AvailabilityModification accommodation={accommodation} ></AvailabilityModification>
               </Tab>
             </Tabs>
