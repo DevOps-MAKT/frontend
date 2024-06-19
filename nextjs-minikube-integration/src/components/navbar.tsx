@@ -121,10 +121,10 @@ const MyNavbar = () => {
 
   return (
     <nav className="bg-primary text-white flex flex-row justify-between px-20 py-2 sticky top-0 z-10">
-      <div className="flex flex-row my-auto space-x-2 w-52">
+      <a className="text-white flex my-auto gap-2" href="/">
         <Logo />
         <span className="font-bold text-inherit">Baboon Bookings</span>
-      </div>
+      </a>
 
       <form onSubmit={handleSubmit} className="flex justify-center space-x-1 col-span-2">
         <Select
@@ -143,6 +143,7 @@ const MyNavbar = () => {
         <Input
           aria-label="Guests"
           type="number"
+          min={1}
           placeholder="Guests"
           className="w-24"
           name="noGuests"

@@ -1,12 +1,12 @@
 export const PlusIcon = (props) => (
   <svg
-    className="w-7 h-7 text-white"
+    className="w-7 h-7 text-white mt-2"
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width="30"
+    height="30"
     fill="none"
-    viewBox="0 0 24 24"
+    viewBox="0 0 30 30"
     {...props}
   >
     <path

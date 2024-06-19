@@ -1,7 +1,7 @@
 import React from "react";
 export const TrashIcon = (props) => (
   <svg
-    className="w-7 h-7 text-white"
+    className="w-7 h-7 text-danger"
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     width="24"
