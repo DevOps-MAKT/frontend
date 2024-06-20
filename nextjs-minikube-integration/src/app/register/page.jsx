@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import { post, get } from "@/utils/httpRequests"
-import { Button, Input, Select, SelectItem, Radio, RadioGroup, FormControlLabel } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem, Radio, RadioGroup } from "@nextui-org/react";
 
 const RegistrationPage = () => {
 
