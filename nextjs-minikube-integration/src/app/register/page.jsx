@@ -2,12 +2,14 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import { post, get } from "@/utils/httpRequests"
+import { Button, Input, Select, SelectItem, Radio, RadioGroup, FormControlLabel } from "@nextui-org/react";
 
 const RegistrationPage = () => {
 
   const router = useRouter();
   const [cities, setCities] = useState([]);
-  const [errors, setErrors] = useState({}); 
+  const [errors, setErrors] = useState({});
+  const [role, setRole] = useState("guest");
 
   const [formData, setFormData] = useState({
     email: '',
@@ -16,7 +18,7 @@ const RegistrationPage = () => {
     confirmPassword: '',
     firstName: '',
     lastName: '',
-    role: 'host',
+    role: 'guest',
     location: '',
   });
 
@@ -29,17 +31,20 @@ const RegistrationPage = () => {
   };
 
   const handleCityChange = (e) => {
-    const location = e.target.value;
     setFormData({
       ...formData,
-      location,
+      location: e.target.value,
     });
+  };
+
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
   };
 
   const passwordsMatch = () => {
     const passwordInput = document.getElementById('password');
     const passwordConfInput = document.getElementById('confirmPassword');
-    
+
     return passwordInput.value === passwordConfInput.value;
   }
 
@@ -70,18 +75,19 @@ const RegistrationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try{
+    try {
       const data = {
         email: formData.email,
         username: formData.username,
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        role: formData.role,
+        role: role,
         city: formData.location.split(', ')[0],
         country: formData.location.split(', ')[1],
       }
-      const response = await post('user' ,'/user/create', JSON.stringify(data));
+      console.log(data)
+      await post('user', '/user/create', JSON.stringify(data));
       router.push("/login");
     } catch (error) {
       console.error('Failed to register:', error.message);
@@ -93,124 +99,77 @@ const RegistrationPage = () => {
       <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl">
         <h2 className="text-2xl font-bold mb-4">Sign up for a new account</h2>
         <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-2 gap-x-4 gap-y-6" noValidate={true} onChange={checkElementsForError} >
-          <div>
-            <label htmlFor="username">Username
-              <input type="text" 
-                      id="username" 
-                      name="username" 
-                      value={formData.username} 
-                      onChange={handleChange} 
-                      placeholder=" " 
-                      className="w-full border border-gray-300 rounded px-3 py-2 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer" 
-                      pattern='[A-Za-z0-9]{6,}' 
-                      required />
-              <span className="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
-                Please enter a valid name
-              </span>
-            </label>
-          </div>
-          <div>
-            <label htmlFor="email">Email
-              <input type="email" 
-                      id="email" 
-                      name="email" 
-                      value={formData.email} 
-                      onChange={handleChange} 
-                      placeholder=" " 
-                      className="w-full border border-gray-300 rounded px-3 py-2 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer" 
-                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                      required />
-              <span className="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
-                Please enter a valid email address
-              </span>
-            </label>
-          </div>
-          <div>
-            <label htmlFor="firstName">First name
-              <input type="text" 
-                      id="firstName" 
-                      name="firstName" 
-                      value={formData.firstName} 
-                      onChange={handleChange} 
-                      placeholder=" " 
-                      className="w-full border border-gray-300 rounded px-3 py-2 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer" 
-                      pattern='([A-Z][a-z]+)+' 
-                      required />
-              <span className="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
-                Please enter a valid name
-              </span>
-            </label>
-          </div>
-          <div>
-            <label htmlFor="lastName">Last name
-              <input type="text" 
-                      id="lastName" 
-                      name="lastName" 
-                      value={formData.lastName} 
-                      onChange={handleChange} 
-                      placeholder=" " 
-                      className="w-full border border-gray-300 rounded px-3 py-2 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer" 
-                      pattern='([A-Z][a-z]+)+' 
-                      required />
-              <span className="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
-                Please enter a valid last name
-              </span>
-            </label>
-          </div>
-          <div>
-            <label htmlFor="password">Password
-              <input type="password" 
-                      id="password" 
-                      name="password" 
-                      value={formData.password} 
-                      onChange={handleChange} 
-                      placeholder=" " 
-                      className="w-full border border-gray-300 rounded px-3 py-2 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer" 
-                      pattern='[A-Za-z0-9]{6,}' 
-                      required />
-              <span className="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
-                Please enter a valid password
-              </span>
-            </label>
-          </div>
-          <div>
-            <label htmlFor="confirmPassword">Confirm Password
-            <input type="password" 
-                    id="confirmPassword" 
-                    name="confirmPassword" 
-                    value={formData.confirmPassword} 
-                    onChange={handleChange} 
-                    placeholder=" " 
-                    className="w-full border border-gray-300 rounded px-3 py-2 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer" 
-                    pattern='[A-Za-z0-9]{6,}' 
-                    required />
-            </label>
-          </div>
-          <div>
-            <label htmlFor="selectedCity" className="block mb-1">City</label>
-            <select id="selectedCity" name="selectedCity" value={formData.location} onChange={handleCityChange} placeholder=" " className="w-full border border-gray-300 rounded px-3 py-2 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer" required >
-              <option value="">Select a location</option>
-              {cities.map(location => (
-                <option key={location} value={location}>{location}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label>Role
-            <div className="mt-2">
-              <label className="inline-flex items-center">
-                <input type="radio" name="role" value="host" onChange={handleChange} checked={formData.role === 'host'} className="form-radio h-5 w-5 text-blue-600" />
-                <span className="ml-2">Host</span>
-              </label>
-              <label className="inline-flex items-center ml-6">
-                <input type="radio" name="role" value="guest" onChange={handleChange} checked={formData.role === 'guest'} className="form-radio h-5 w-5 text-blue-600" />
-                <span className="ml-2">Guest</span>
-              </label>
-            </div></label>
-          </div>
-          <button type="submit" className={`col-span-2 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${errors ? 'pointer-events-none opacity-30' : ''} `} disabled={errors} >
+          <Input type="text"
+            id="username"
+            name="username"
+            label="Username"
+            value={formData.username}
+            onChange={handleChange}
+            pattern='[A-Za-z0-9]{6,}'
+            required />
+          <Input type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            label="Email"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+            required />
+          <Input type="text"
+            id="firstName"
+            name="firstName"
+            label="First name"
+            value={formData.firstName}
+            onChange={handleChange}
+            pattern='([A-Z][a-z]+)+'
+            required />
+          <Input type="text"
+            id="lastName"
+            name="lastName"
+            label="Last name"
+            value={formData.lastName}
+            onChange={handleChange}
+            pattern='([A-Z][a-z]+)+'
+            required />
+          <Input type="password"
+            id="password"
+            name="password"
+            label="Password"
+            value={formData.password}
+            onChange={handleChange}
+            pattern='[A-Za-z0-9]{6,}'
+            required />
+          <Input type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            label="Confirm password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            pattern='[A-Za-z0-9]{6,}'
+            required />
+          <Select
+            label="Select a location"
+            value={formData.location}
+            onChange={handleCityChange}
+          >
+            {cities.map((city) => (
+              <SelectItem key={city} value={city}>
+                {city}
+              </SelectItem>
+            ))}
+          </Select>
+          <RadioGroup
+            label="Role"
+            value={role}
+            onChange={handleRoleChange}
+            orientation="horizontal"
+          >
+            <Radio value="guest">Guest</Radio>
+            <Radio value="host">Host</Radio>
+          </RadioGroup>
+          <Button type="submit" color="primary" className={`col-span-2 ${errors ? 'pointer-events-none opacity-30' : ''} `} disabled={errors} >
             Sign up
-          </button>
+          </Button>
         </form>
 
         <div className="text-sm text-center mt-4">
