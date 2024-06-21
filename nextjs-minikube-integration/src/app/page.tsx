@@ -6,7 +6,11 @@ export default function Home() {
   return (
     <div className="bg-gray-100 min-h-[calc(100vh-56px)] flex flex-col items-center pt-10">
       <header className="text-center mb-10">
-        <h1 className="text-5xl font-bold text-gray-800">Baboon Bookings</h1>
+        <h1 className="text-5xl font-bold text-gray-800 flex flex-row gap-4">
+          <img src="just-monkey.png" height={48} width={48} />
+          <span>Baboon Bookings</span>
+          <img src="just-monkey.png" height={48} width={48} className="scale-x-[-1]" />
+        </h1>
         <p className="text-lg text-gray-600 mt-2">Where every reservation is monkey business</p>
       </header>
       <main className="flex flex-col items-center space-y-6 px-4 w-1/2">

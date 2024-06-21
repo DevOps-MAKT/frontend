@@ -1,5 +1,5 @@
 'use client'
-import { Button, DateValue, Input, RangeValue, Select, SelectItem, Link, Badge } from "@nextui-org/react";
+import { Button, DateValue, Input, RangeValue, Select, SelectItem, Link, Badge, Image } from "@nextui-org/react";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { useEffect, useState } from "react";
 import { Location } from "@/model/Location";
@@ -122,8 +122,8 @@ const MyNavbar = () => {
   return (
     <nav className="bg-primary text-white flex flex-row justify-between px-20 py-2 sticky top-0 z-10">
       <a className="text-white flex my-auto gap-2" href="/">
-        <Logo />
-        <span className="font-bold text-inherit">Baboon Bookings</span>
+        <img src="monkey.png" width={36} height={36}  />
+        <span className="my-auto text-2xl ">Baboon Bookings</span>
       </a>
 
       <form onSubmit={handleSubmit} className="flex justify-center space-x-1 col-span-2">
