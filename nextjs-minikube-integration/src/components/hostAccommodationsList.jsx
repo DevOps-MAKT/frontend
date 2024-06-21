@@ -24,7 +24,7 @@ const HostAccommodationsList = () => {
         {accommodations.length === 0 ? (
           <div className="text-gray-300 py-8">You don&apos;t have any accommodations.</div>
         ) : (
-          <div className="flex flex-col items-center w-full">
+          <div className="flex flex-col items-center w-full space-y-6">
             {accommodations.map((accommodation, index) => (
               <AccommodationSearchItem key={index} accommodation={accommodation} />
             ))}

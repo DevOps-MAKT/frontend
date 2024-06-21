@@ -1,13 +1,15 @@
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { post } from '@/utils/httpRequests';
 import { parseDate } from "@internationalized/date";
-import { Input, Button, DateRangePicker } from '@nextui-org/react';
+import { Input, Button, DateRangePicker, useDisclosure } from '@nextui-org/react';
+import InfoModal from "@/components/infoModal"
 
 const Booking = ({ accommodation }) => {
 
   const [range, setRange] = useState();
   const [noGuests, setNoGuests] = useState();
+  const modal = useDisclosure();
 
   const timestampToDate = (unixTimestamp) => {
     const date = new Date(unixTimestamp);
@@ -23,26 +25,22 @@ const Booking = ({ accommodation }) => {
     return timestamp;
   }
 
-  const [availableRanges, setAvailableRanges] = useState(
-    accommodation.availabilityPeriods.map(date => ({
-      start: timestampToDate(date.startDate),
-      end: timestampToDate(date.endDate),
-    }))
-  );
+  const availableRanges = accommodation.availabilityPeriods.map(date => ({
+    startDate: timestampToDate(date.startDate),
+    endDate: timestampToDate(date.endDate),
+  }));
 
-  const [reservations, setReservations] = useState(
-    accommodation.reservations.map(reservation => ({
-      start: timestampToDate(reservation.startDate),
-      end: timestampToDate(reservation.endDate),
-    }))
-  );
+  const reservations = accommodation.reservations.map(reservation => ({
+    startDate: timestampToDate(reservation.startDate),
+    endDate: timestampToDate(reservation.endDate),
+  }));
 
   let isDateUnavailable = (date) => {
     const isInAvailability = availableRanges.some(
-      (interval) => date.compare(interval.start) >= 0 && date.compare(interval.end) <= 0,
+      (interval) => date.compare(interval.startDate) >= 0 && date.compare(interval.endDate) <= 0,
     )
     const isInReservation = reservations.some(
-      (interval) => date.compare(interval.start) >= 0 && date.compare(interval.end) <= 0,
+      (interval) => date.compare(interval.startDate) >= 0 && date.compare(interval.endDate) <= 0,
     )
     return !isInAvailability || isInReservation;
   };
@@ -57,6 +55,7 @@ const Booking = ({ accommodation }) => {
     };
     try {
       await post('reservation', `/reservation/create`, data);
+      modal.onOpen();
     } catch (error) {
       console.error('Failed to make a reservation:', error.message);
     }
@@ -91,6 +90,7 @@ const Booking = ({ accommodation }) => {
         </div>
 
       </div>
+      <InfoModal modalObject={modal} message="You have successfully requested a booking for this accommodation." title="Success" />
     </div>
   );
 };

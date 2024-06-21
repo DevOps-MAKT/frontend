@@ -24,7 +24,7 @@ const AccommodationManagementPage = () => {
           <Tab  title="New accommodation">
             <AccommodationRegistration />
           </Tab>
-          <Tab title="Upcoming reservations">
+          <Tab title="Pending approval">
             <UpcomingHostReservations />
           </Tab>
         </Tabs>

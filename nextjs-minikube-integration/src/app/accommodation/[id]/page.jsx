@@ -34,7 +34,7 @@ const AccommodationPage = ({ params }) => {
 
   useEffect(() => {
 
-    setIsGuest(getRole === "guest");
+    setIsGuest(getRole() === "guest");
 
     const fetchMyAccommodations = async () => {
       try {
@@ -45,7 +45,6 @@ const AccommodationPage = ({ params }) => {
             setIsOwner(true);
           }
         });
-        console.log(response.data)
       } catch (error) {
         console.error('Failed to fetch accommodations:', error.message);
       }
@@ -55,6 +54,7 @@ const AccommodationPage = ({ params }) => {
       try {
         const response = await get('accommodation', `/accommodation/${id}`);
         setAccommodation(response.data);
+        console.log(response.data)
       } catch (error) {
         console.error('Failed to fetch accommodations:', error.message);
       }
@@ -98,7 +98,7 @@ const AccommodationPage = ({ params }) => {
     <div className="flex justify-center items-start min-h-[calc(100vh-56px)] py-12">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl space-y-4">
         <Skeleton className="w-full space-y-4" isLoaded={accommodation.imageUrl !== ''}>
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-between mb-4">
             <div>
               <h1 className="text-3xl">{accommodation.name}</h1>
               <div className="flex flex-row text-gray-700">
