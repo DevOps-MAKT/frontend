@@ -47,7 +47,7 @@ const MyNavbar = () => {
       }
     };
 
-    var role = getRole()
+    var role = getRole();
     if (role === null) {
       role = "";
     }

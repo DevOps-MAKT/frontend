@@ -151,7 +151,6 @@ const ProfilePage = () => {
         accommodationRatedNotificationsActive: accommodationRatedNotificationsActive,
         reservationRequestAnsweredActive: reservationRequestAnsweredActive
       };
-      console.log(data)
       await patch('user', '/user/active-notification-statuses', JSON.stringify(data));
       setMessage("You have successfully updated your notification settings.");
       okModal.onOpen();

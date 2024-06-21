@@ -49,6 +49,7 @@ const UpcomingHostReservations = () => {
       await patch('reservation', `/reservation/${chosenReservation}/accept`);
       removeReservation(chosenReservation);
       approveReservationModal.onClose();
+      window.location.reload();
     } catch (error) {
       console.error('Reservation approval failed:', error.message);
     }
@@ -59,6 +60,7 @@ const UpcomingHostReservations = () => {
       await patch('reservation', `/reservation/${chosenReservation}/reject`);
       removeReservation(chosenReservation);
       cancelReservationModal.onClose();
+      window.location.reload();
     } catch (error) {
       console.error('Reservation approval failed:', error.message);
     }

@@ -1,11 +1,13 @@
 
 import { useState, useMemo } from 'react';
 import { post } from '@/utils/httpRequests';
-import { parseDate } from "@internationalized/date";
+import { today, getLocalTimeZone, parseDate } from "@internationalized/date";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, RangeCalendar } from '@nextui-org/react';
 import { PlusIcon } from "@/icons/plus";
 
 const AvailabilityCreation = ({ accommodation }) => {
+
+  let now = today(getLocalTimeZone());
 
   const formatDate = (date) => {
     return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`
@@ -28,16 +30,18 @@ const AvailabilityCreation = ({ accommodation }) => {
   const [range, setRange] = useState();
 
   const [availableRanges, setAvailableRanges] = useState(
-    accommodation.availabilityPeriods.map( date => ({
+    accommodation.availabilityPeriods.map(date => ({
       start: timestampToDate(date.startDate),
       end: timestampToDate(date.endDate),
     }))
   );
 
-  let isDateUnavailable = (date) =>
-    availableRanges.some(
+  let isDateUnavailable = (date) => {
+    if (date.compare(now) < 0) return true;
+    return availableRanges.some(
       (interval) => date.compare(interval.start) >= 0 && date.compare(interval.end) <= 0,
     );
+  }
 
   const handleAddRange = async () => {
     const data = {
@@ -72,16 +76,14 @@ const AvailabilityCreation = ({ accommodation }) => {
 
         <RangeCalendar
           aria-label="Date"
-          value={range} 
-          onChange={setRange} 
+          value={range}
+          onChange={setRange}
           isDateUnavailable={isDateUnavailable}
         />
 
         <Table
           isHeaderSticky
           color="primary"
-          selectionMode="single"
-          defaultSelectedKeys={[]}
           aria-label="Availability periods"
           topContent={bottomContent}
           topContentPlacement="outside"

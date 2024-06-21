@@ -94,7 +94,6 @@ const AvailabilityModification = ({ accommodation }) => {
     }
     try {
       setSpecialPrices(prevRanges => [...prevRanges, newSpecialPrice]);
-      console.log(data)
       await post('accommodation', `/accommodation/change-availability-info`, data);
     } catch (error) {
       console.error('Failed to add availability period:', error.message);

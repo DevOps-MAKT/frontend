@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { post } from "@/utils/httpRequests";
 import { getToken, setToken } from "@/utils/token";
-import { Button, Input, Select, SelectItem, Radio, RadioGroup } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 
 const LogInPage = () => {
 
