@@ -10,7 +10,7 @@ import { PublicEnvScript } from 'next-runtime-env';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Baboon Booking",
+  title: "Baboon Bookings",
   description: "Where every reservation is monkey business",
 };
 
